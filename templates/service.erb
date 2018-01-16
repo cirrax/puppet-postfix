@@ -1,0 +1,12 @@
+<% if @comments != [] -%>
+
+<% end -%>
+<% @comments.each do | comment | -%>
+# <%= comment %>
+<% end -%>
+<% @service_names.each do | s_n | -%>
+<% if !@active %>#<% end %><%= s_n.ljust(9,' ') %> <%= @type.ljust(5,' ') %> <%= @priv.ljust(7,' ') %> <%= @unpriv.ljust(7,' ') %> <%= @chroot.ljust(7,' ') %> <%= "#{@wakeup}".ljust(7,' ') %> <%= "#{@maxproc}".ljust(7,' ') %> <%= @command %>
+<% @args.each do | arg | -%>
+<% if !@active %>#<% end %>    <%= arg %>
+<% end -%>
+<% end -%>

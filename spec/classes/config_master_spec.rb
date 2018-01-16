@@ -1,0 +1,57 @@
+
+require 'spec_helper'
+
+describe 'postfix::config::master' do
+  let(:pre_condition) { 'service {"postfix": }' }
+
+  shared_examples_for 'postfix::config::master class' do
+    it { is_expected.to compile.with_all_deps }
+
+  end
+
+  describe 'with default params' do
+    it_behaves_like 'postfix::config::master class'
+
+    it 'configures postfix main_cf_file' do
+      is_expected.to contain_concat('/etc/postfix/master.cf').with(
+        :owner => 'root',
+        :group => 'root',
+        :mode  => '0644',
+      )
+    end
+
+    context 'it includes concat_fragment' do
+      it { is_expected.to contain_concat_fragment('postfix: master_cf_header')
+	.with_target('/etc/postfix/master.cf')
+        .with_order('00')
+	.with_content(/^#/)
+      }
+    end
+  end
+
+  describe 'with default non params' do
+    let :params do
+      { :master_cf_file => '/tmp/postfix.cf',
+	:owner          => 'one',
+	:group          => 'two',
+	:mode           => '4242',
+      }
+    end
+
+    it_behaves_like 'postfix::config::master class'
+
+    it 'configures postfix main_cf_file' do
+      is_expected.to contain_concat('/tmp/postfix.cf').with(
+        :owner => 'one',
+        :group => 'two',
+        :mode  => '4242',
+      )
+    end
+
+    context 'it includes concat_fragment' do
+      it { is_expected.to contain_concat_fragment('postfix: master_cf_header')
+	.with_target('/tmp/postfix.cf')
+      }
+    end
+  end
+end

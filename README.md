@@ -26,57 +26,57 @@ The all available options for classes and defines are documented in the header o
 To use, include the postfix class. By default this will install the satellite configuration. If you want to use the server configuration
 set $postfix::is\_satellite to false.
 
-To set the values for the satellite, use postfix::satellite::XXXX for the server use postfix::server:XXXX. all values are also 
+To set the values for the satellite, use postfix::satellite::XXXX for the server use postfix::server:XXXX. All values are also 
 available in the postfix class as postfix::common_XXXX. These will be inherited to postfix::satellite and postfx::server class.
 
 #### To set parameters in main.cf file, use:
 
-postfix::common_parameters: # or use postfix::satellite::parameters:/postfix::server::parameters
-  bounce_size_limit:
-    comments:
-      - 'The maximal amount of original message text that is sent in a'
-      - 'non-delivery notification'
-    value: 50000
-  header_size_limit:
-    comments:
-      - 'The maximal amount of memory in bytes for storing a message header.'
-      - 'If a header is larger, the excess is discarded'
-    value: 102400
-
+    postfix::common_parameters: # or use postfix::satellite::parameters:/postfix::server::parameters
+        bounce_size_limit:
+          comments:
+            - 'The maximal amount of original message text that is sent in a'
+            - 'non-delivery notification'
+          value: 50000
+        header_size_limit:
+          comments:
+            - 'The maximal amount of memory in bytes for storing a message header.'
+            - 'If a header is larger, the excess is discarded'
+          value: 102400
+      
 if you do not like to have a comment you can also set:
-
-postfix::common_parameters:
-  bounce_size_limit: 50000
-  header_size_limit: 102400
-
+  
+    postfix::common_parameters:
+      bounce_size_limit: 50000
+      header_size_limit: 102400
+  
 #### To set services in master.cf file use:
 
 To add a service in master.cf file use:
 
-postfix::common_services: # or use postfix::satellite::services or postfix::server::services:
-    smtp:
-      type: 'inet',
-      priv: 'n',
-      chroot: 'y',
-      command: 'smtpd',
-    rewrite:
-      chroot: 'y'
-      command: 'trivial-rewrite'
+    postfix::common_services: # or use postfix::satellite::services or postfix::server::services:
+      smtp:
+        type: 'inet',
+        priv: 'n',
+        chroot: 'y',
+        command: 'smtpd',
+      rewrite:
+        chroot: 'y'
+        command: 'trivial-rewrite'
 
 #### create lookup maps:
 
 simple lookup maps can be created using:
 
-postfix::common_maps: # or use postffix::satellite:maps or postfix::server::maps:
-  regex_sender_canonical:
-    type: 'regex'
-    contents:
-      - "/^(.*)@%{::fqdn}/      ${1}+%{::hostname}@internaldomain.cirrax.com"
-  hash_rewrite_local_sender:
-    type: 'hash'
-    contents:
-      - 'user1          user1@cirrax.com'
-      - 'user2          user2@cirrax.com'
+    postfix::common_maps: # or use postfix::satellite:maps or postfix::server::maps:
+      regex_sender_canonical:
+        type: 'regex'
+        contents:
+          - "/^(.*)@%{::fqdn}/      ${1}+%{::hostname}@internaldomain.cirrax.com"
+      hash_rewrite_local_sender:
+        type: 'hash'
+        contents:
+          - 'user1          user1@cirrax.com'
+          - 'user2          user2@cirrax.com'
 
 To use them use set the parameters in master.cf accordingly.
 

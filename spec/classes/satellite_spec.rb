@@ -4,6 +4,7 @@ require 'spec_helper'
 
 describe 'postfix::satellite' do
   let(:pre_condition) { 'service {"postfix": }' }
+  let :facts do  { :osfamily => 'Debian' } end
 
   shared_examples_for 'postfix satellite' do
 

@@ -2,6 +2,7 @@
 require 'spec_helper'
 
 describe 'postfix::config::service' do
+  let :facts do  { :osfamily => 'Debian' } end
 
   shared_examples 'postfix::config::service define' do
 
@@ -19,6 +20,14 @@ describe 'postfix::config::service' do
 
   context 'whith defaults' do
     let (:title) { 'debian' }
+
+    it_behaves_like 'postfix::config::service define'
+
+  end
+
+  context 'on OpenBSD' do
+    let (:title) { 'openbsd' }
+    let :facts do  { :osfamily => 'OpenBSD' } end
 
     it_behaves_like 'postfix::config::service define'
 

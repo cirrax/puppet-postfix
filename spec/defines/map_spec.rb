@@ -3,6 +3,7 @@ require 'spec_helper'
 
 describe 'postfix::map' do
   let(:pre_condition) { 'service {"postfix": }' }
+  let :facts do  { :osfamily => 'Debian' } end
 
   shared_examples 'postfix::map define' do
 
@@ -36,6 +37,21 @@ describe 'postfix::map' do
 
     it_behaves_like 'postfix::map define'
 
+  end
+
+  context 'on OpenBSD' do
+    let :facts do  { :osfamily => 'OpenBSD' } end
+    let (:title) { 'openBSD' }
+
+    context 'it includes map file' do
+      it { is_expected.to contain_concat('/etc/postfix/maps/' + title)
+        .with( :owner => 'root',
+	       :group => 'wheel',
+	       :mode  => '0644',
+	)
+        .with_notify('Service[postfix]')
+      }
+    end
   end
 
   context 'whith content defined' do

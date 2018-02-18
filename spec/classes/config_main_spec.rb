@@ -1,8 +1,8 @@
 
 require 'spec_helper'
-
 describe 'postfix::config::main' do
   let(:pre_condition) { 'service {"postfix": }' }
+  let :facts do  { :osfamily => 'Debian' } end
 
   shared_examples_for 'postfix::config::main class' do
     it { is_expected.to compile.with_all_deps }
@@ -21,6 +21,21 @@ describe 'postfix::config::main' do
         .with_notify('Service[postfix]')
         .with_content(/^#/)
     end
+  end
+
+  describe 'on OpenBSD' do
+    let :facts do  { :osfamily => 'OpenBSD' } end
+    it_behaves_like 'postfix::config::main class'
+
+    it { is_expected.to contain_file('/etc/postfix/main.cf')
+	.with(
+          :owner => 'root',
+          :group => 'wheel',
+          :mode  => '0644',
+        )
+        .with_notify('Service[postfix]')
+        .with_content(/^#/)
+    }
   end
 
   describe 'with default non params' do
@@ -45,5 +60,4 @@ describe 'postfix::config::main' do
         .with_content(/^#/)
     end
   end
-
 end

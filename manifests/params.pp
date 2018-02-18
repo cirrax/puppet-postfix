@@ -1,4 +1,4 @@
-# default parameters
+# default paraeters
 class postfix::params {
 
   $service_name   = 'postfix'
@@ -8,21 +8,11 @@ class postfix::params {
   $main_cf_file   = '/etc/postfix/main.cf'
   $master_cf_file = '/etc/postfix/master.cf'
   $ssl_dir        = '/etc/postfix/ssl'
-  $owner          = 'root'
-  $group          = 'root'
-  $mode           = '0644'
-
-  $map_dir        = '/etc/postfix/maps'
-  $map_owner      = $owner
-  $map_group      = $group
-  $map_mode       = '0640'
-
-  $postmap_command = '/usr/sbin/postmap'
 
   $packages       = ['postfix']
   $package_ensure = 'present'
 
-  $default_parameters = {
+  $_default_parameters = {
     myhostname          => {
       comments => ['The internet hostname of this mail system'],
       value    => $::fqdn,
@@ -171,4 +161,53 @@ class postfix::params {
       order   =>  '60_146',
     },
   }
+
+  # per Operating system defaults
+  case $::osfamily {
+    'OpenBSD': {
+      $owner               = 'root'
+      $group               = 'wheel'
+      $postmap_command     = '/usr/local/sbin/postmap'
+      $default_parameters  = merge( {
+        mail_owner => {
+          comments => ['Only set this on OpenBSD, since it is not default' ],
+          value    => '_postfix',
+        },
+        setgid_group => {
+          comments => ['Only set this on OpenBSD, since it is not default' ],
+          value    => '_postdrop',
+        },
+        daemon_directory => {
+          comments => ['Only set this on OpenBSD, since it is not default' ],
+          value    => '/usr/local/libexec/postfix',
+        },
+        command_directory => {
+          comments => ['Only set this on OpenBSD, since it is not default' ],
+          value    => '/usr/local/sbin',
+        },
+      }, $_default_parameters )
+      $exec_postfix_enable = true
+      $disabled_services   = ['smtpd']
+      $sync_chroot         = '/var/spool/postfix'
+      $ensure_syslog_flag  = false
+    }
+    default: {
+      $owner               = 'root'
+      $group               = 'root'
+      $postmap_command     = '/usr/sbin/postmap'
+      $default_parameters  = $_default_parameters
+      $exec_postfix_enable = false
+      $disabled_services   = []
+      $sync_chroot         = ''  # do not sync
+      $ensure_syslog_flag  = false
+    }
+  }
+
+  $mode           = '0644'
+
+  $map_dir        = '/etc/postfix/maps'
+  $map_owner      = $owner
+  $map_group      = $group
+  $map_mode       = '0640'
+
 }

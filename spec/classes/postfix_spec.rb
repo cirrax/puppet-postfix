@@ -2,6 +2,7 @@
 require 'spec_helper'
 
 describe 'postfix' do
+  let :facts do  { :osfamily => 'Debian' } end
 
   shared_examples_for 'postfix class' do
     it { is_expected.to compile.with_all_deps }
@@ -48,4 +49,22 @@ describe 'postfix' do
     it { is_expected.to contain_class('postfix::server') }
   end
 
+  describe 'on OpenBSD' do
+    let :facts do  { :osfamily => 'OpenBSD' } end
+
+    it { is_expected.to contain_file('/etc/postfix/ssl')
+      .with( :ensure => 'directory',
+             :owner  => 'root',
+	     :group  => 'wheel',
+	     :mode   => '0755',
+      )
+    }
+    it { is_expected.to contain_file('/etc/postfix/maps')
+      .with( :ensure => 'directory',
+             :owner  => 'root',
+	     :group  => 'wheel',
+	     :mode   => '0755',
+      )
+    }
+  end
 end

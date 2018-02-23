@@ -50,9 +50,11 @@ class postfix (
   $ssl_dir            = $postfix::params::ssl_dir,
 ) inherits ::postfix::params {
 
+  Package<|tag == 'postfix-packages'|> -> File[ $map_dir, $ssl_dir ]
+
   $package_default = {
     ensure => $package_ensure,
-    tag    => 'postfix',
+    tag    => 'postfix-packages',
   }
   ensure_packages($packages, $package_default)
 

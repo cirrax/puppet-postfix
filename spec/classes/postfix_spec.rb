@@ -11,7 +11,7 @@ describe 'postfix' do
 
     it { is_expected.to contain_package('postfix')
       .with( :ensure => 'present',
-             :tag    => 'postfix',
+             :tag    => 'postfix-packages',
       )
     }
 

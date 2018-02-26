@@ -35,6 +35,8 @@ class postfix::config::main (
   $local_parameters = {},
 ) inherits ::postfix::params {
 
+  Package<|tag == 'postfix-packages'|> -> File[ $main_cf_file ]
+
   $_parameters=merge($parameters, $local_parameters)
 
   file { $main_cf_file :

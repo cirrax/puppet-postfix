@@ -7,6 +7,8 @@ class postfix::config::master (
   $services     = {},
 ) inherits ::postfix::params {
 
+  Package<|tag == 'postfix-packages'|> -> Concat[ $master_cf_file ]
+
   concat { $master_cf_file :
     owner  => $owner,
     group  => $group,

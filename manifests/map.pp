@@ -28,12 +28,12 @@
 #   is used.
 #
 define postfix::map (
-  $map_name        = $title,
-  $map_dir         = '',
-  $type            = 'hash',
-  $source          = '',
-  $contents        = [],
-  $postmap_command = '',
+  String $map_name        = $title,
+  String $map_dir         = '',
+  String $type            = 'hash',
+  String $source          = '',
+  Array  $contents        = [],
+  String $postmap_command = '',
 ) {
 
   include ::postfix::params

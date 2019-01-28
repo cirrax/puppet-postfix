@@ -38,16 +38,16 @@
 #
 #
 class postfix (
-  $is_satellite       = true,
-  $packages           = $postfix::params::packages,
-  $package_ensure     = $postfix::params::package_ensure,
-  $common_parameters  = {},
-  $default_parameters = $postfix::params::default_parameters,
-  $common_services    = {},
-  $default_services   = $postfix::params::default_services,
-  $common_maps        = {},
-  $map_dir            = $postfix::params::map_dir,
-  $ssl_dir            = $postfix::params::ssl_dir,
+  Boolean $is_satellite       = true,
+  Array   $packages           = $postfix::params::packages,
+  String  $package_ensure     = $postfix::params::package_ensure,
+  Hash    $common_parameters  = {},
+  Hash    $default_parameters = $postfix::params::default_parameters,
+  Hash    $common_services    = {},
+  Hash    $default_services   = $postfix::params::default_services,
+  Hash    $common_maps        = {},
+  String  $map_dir            = $postfix::params::map_dir,
+  String  $ssl_dir            = $postfix::params::ssl_dir,
 ) inherits ::postfix::params {
 
   Package<|tag == 'postfix-packages'|> -> File[ $map_dir, $ssl_dir ]

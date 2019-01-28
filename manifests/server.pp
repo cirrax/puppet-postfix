@@ -69,17 +69,17 @@
 #         to postfix::satellite
 #
 class postfix::server (
-  $parameters         = {},
-  $common_parameters  = {},
-  $default_parameters = $postfix::params::default_parameters,
-  $services           = {},
-  $common_services    = {},
-  $default_services   = $postfix::params::default_services,
-  $maps               = {},
-  $common_maps        = {},
-  $packages           = [],
-  $package_ensure     = $postfix::params::package_ensure,
-  $create_resources   = {},
+  Hash   $parameters         = {},
+  Hash   $common_parameters  = {},
+  Hash   $default_parameters = $postfix::params::default_parameters,
+  Hash   $services           = {},
+  Hash   $common_services    = {},
+  Hash   $default_services   = $postfix::params::default_services,
+  Hash   $maps               = {},
+  Hash   $common_maps        = {},
+  Array  $packages           = [],
+  String $package_ensure     = $postfix::params::package_ensure,
+  Hash   $create_resources   = {},
 ) inherits postfix::params {
 
   $package_default = {

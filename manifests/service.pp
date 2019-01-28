@@ -27,13 +27,13 @@
 #   defaults to $postfix::params::ensure_syslog_flag
 #
 class postfix::service(
-  $service_name        = $postfix::params::service_name,
-  $service_ensure      = $postfix::params::service_ensure,
-  $service_enable      = $postfix::params::service_enable,
-  $disabled_services   = $postfix::params::disabled_services,
-  $exec_postfix_enable = $postfix::params::exec_postfix_enable,
-  $sync_chroot         = $postfix::params::sync_chroot,
-  $ensure_syslog_flag  = $postfix::params::ensure_syslog_flag,
+  String  $service_name        = $postfix::params::service_name,
+  String  $service_ensure      = $postfix::params::service_ensure,
+  Boolean $service_enable      = $postfix::params::service_enable,
+  Array   $disabled_services   = $postfix::params::disabled_services,
+  Boolean $exec_postfix_enable = $postfix::params::exec_postfix_enable,
+  String  $sync_chroot         = $postfix::params::sync_chroot,
+  Boolean $ensure_syslog_flag  = $postfix::params::ensure_syslog_flag,
 ) inherits postfix::params {
 
   service{'postfix':

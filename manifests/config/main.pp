@@ -27,12 +27,12 @@
 #    Defaults to {}
 #
 class postfix::config::main (
-  $main_cf_file     = $postfix::params::main_cf_file,
-  $owner            = $postfix::params::owner,
-  $group            = $postfix::params::group,
-  $mode             = $postfix::params::mode,
-  $parameters       = {},
-  $local_parameters = {},
+  String $main_cf_file     = $postfix::params::main_cf_file,
+  String $owner            = $postfix::params::owner,
+  String $group            = $postfix::params::group,
+  String $mode             = $postfix::params::mode,
+  Hash   $parameters       = {},
+  Hash   $local_parameters = {},
 ) inherits ::postfix::params {
 
   Package<|tag == 'postfix-packages'|> -> File[ $main_cf_file ]

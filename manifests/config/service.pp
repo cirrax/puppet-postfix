@@ -46,19 +46,19 @@
 # See master(5) for details
 #
 define postfix::config::service (
-  $type           = 'unix',
-  $command        = $title,
-  $service_names  = [ $title ],
-  $priv           = '-',
-  $unpriv         = '-',
-  $chroot         = '-',
-  $wakeup         = '-',
-  $maxproc        = '-',
-  $args           = [],
-  $comments       = [],
-  $active         = true,
-  $order          = '55',
-  $master_cf_file = '',
+  String  $type           = 'unix',
+  String  $command        = $title,
+  Array   $service_names  = [ $title ],
+  String  $priv           = '-',
+  String  $unpriv         = '-',
+  String  $chroot         = '-',
+  String  $wakeup         = '-',
+  String  $maxproc        = '-',
+  Array   $args           = [],
+  Array   $comments       = [],
+  Boolean $active         = true,
+  String  $order          = '55',
+  String  $master_cf_file = '',
 ){
 
   include ::postfix::params

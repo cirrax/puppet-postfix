@@ -41,11 +41,12 @@
 #  $order
 #    order of the fragment (defaults to '55')
 #  $master_cf_file
-#    target, if '' (default), $params::master_cf_file is used.
+#    target
 #
 # See master(5) for details
 #
 define postfix::config::service (
+  String  $master_cf_file,
   String  $type           = 'unix',
   String  $command        = $title,
   Array   $service_names  = [ $title ],
@@ -58,19 +59,10 @@ define postfix::config::service (
   Array   $comments       = [],
   Boolean $active         = true,
   String  $order          = '55',
-  String  $master_cf_file = '',
 ){
 
-  include ::postfix::params
-
-  if $master_cf_file == '' {
-    $target = $postfix::params::master_cf_file
-  } else {
-    $target = $master_cf_file
-  }
-
   concat::fragment{"master.cf service: ${title}":
-    target  => $target,
+    target  => $master_cf_file,
     content => template('postfix/service.erb'),
     order   => $order,
   }

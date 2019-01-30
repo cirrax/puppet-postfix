@@ -1,11 +1,11 @@
 
 class postfix::config::master (
-  String $master_cf_file = $postfix::params::master_cf_file,
-  String $owner        = $postfix::params::owner,
-  String $group        = $postfix::params::group,
-  String $mode         = $postfix::params::mode,
-  Hash   $services     = {},
-) inherits ::postfix::params {
+  String $master_cf_file,
+  String $owner,
+  String $group,
+  String $mode,
+  Hash   $services = {},
+) {
 
   Package<|tag == 'postfix-packages'|> -> Concat[ $master_cf_file ]
 

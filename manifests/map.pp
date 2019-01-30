@@ -6,13 +6,12 @@
 #
 # Parameters
 #
-# $map_name
-#   The name of the map
-#   defaults to $title
-# $map_dir     = '',
+# $map_dir
 #   the directory to create the map in
-#   if set to '' (default) $postfix::params::map_dir
-#   is used.
+# $postmap_command
+#   postmap command
+# $map_name
+#   The name of the map defaults to $title
 # $type
 #   the type of the map
 #   defaults to hash
@@ -22,37 +21,25 @@
 # $contents
 #   Array of lines to add to the map
 #   defaults to []
-# $postmap_command
-#   postmap command
-#   if set to '' (default $postfix::params::postmap_command
-#   is used.
 #
 define postfix::map (
+  String $map_dir,
+  String $postmap_command,
+  String $owner,
+  String $group,
+  String $mode,
   String $map_name        = $title,
-  String $map_dir         = '',
   String $type            = 'hash',
   String $source          = '',
   Array  $contents        = [],
-  String $postmap_command = '',
 ) {
 
-  include ::postfix::params
-  if $map_dir == '' {
-    $filename = "${postfix::params::map_dir}/${map_name}"
-  } else {
-    $filename = "${map_dir}/${map_name}"
-  }
-
-  if $postmap_command == '' {
-    $_postmap_command = $postfix::params::postmap_command
-  } else {
-    $_postmap_command = $postmap_command
-  }
+  $filename = "${map_dir}/${map_name}"
 
   concat { $filename:
-    owner  => $postfix::params::owner,
-    group  => $postfix::params::group,
-    mode   => $postfix::params::mode,
+    owner  => $owner,
+    group  => $group,
+    mode   => $mode,
     notify => Service['postfix'],
   }
 
@@ -86,7 +73,7 @@ define postfix::map (
 
   if $ext != 'unknown' {
     exec { "rebuild map ${title}":
-      command     => "${_postmap_command} ${type}:${filename}",
+      command     => "${postmap_command} ${type}:${filename}",
       subscribe   => Concat[$filename],
       refreshonly => true,
       creates     => "${filename}.${ext}",

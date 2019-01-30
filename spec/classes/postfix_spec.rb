@@ -75,6 +75,10 @@ describe 'postfix' do
 
   describe 'on OpenBSD' do
     let :facts do  { :osfamily => 'OpenBSD' } end
+    let :params do
+      { :group => 'wheel' 
+      }
+    end
 
     it_behaves_like 'postfix server'
 

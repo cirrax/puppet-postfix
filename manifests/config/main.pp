@@ -8,27 +8,23 @@
 # Parameters:
 #  $main_cf_file
 #    name and path of the main.cf file
-#    Defaults to $postfix::params::main_cf_file,
 #  $owner
 #    owner of the main.cf file
-#    Defaults to $postfix::params::owner
 #  $group
 #    group of the main.cf file
-#    Defaults to $postfix::params::group,
 #  $mode
 #    mode of the main.cf file
-#    Defaults to $postfix::params::mode,
 #  $parameters
 #    The parameters to set in the main.cf file
 #    Defaults to {}
 #
 class postfix::config::main (
-  String $main_cf_file     = $postfix::params::main_cf_file,
-  String $owner            = $postfix::params::owner,
-  String $group            = $postfix::params::group,
-  String $mode             = $postfix::params::mode,
+  String $main_cf_file,
+  String $owner,
+  String $group,
+  String $mode,
   Hash   $parameters       = {},
-) inherits ::postfix::params {
+) {
 
   Package<|tag == 'postfix-packages'|> -> File[ $main_cf_file ]
 

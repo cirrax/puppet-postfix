@@ -4,7 +4,6 @@
 # Parameters:
 #   $packages
 #     packagase to install
-#     defaults to $postfix::params::packages
 #   $package_ensure
 #     defaults to 'install'
 #   $parameters:
@@ -17,22 +16,25 @@
 #     Defaults to {}     
 #   $map_dir:
 #     directory for maps to create
-#     Defaults to $postfix::params::map_dir
 #   $ssl_dir:
 #     directory for ssl to create
-#     Defaults to $postfix::params::ssl_dir
-#
 #
 class postfix (
-  Array   $packages           = $postfix::params::packages,
-  String  $package_ensure     = $postfix::params::package_ensure,
-  Hash    $parameters         = {},
-  Hash    $services           = {},
-  Hash    $maps               = {},
-  String  $map_dir            = $postfix::params::map_dir,
-  String  $ssl_dir            = $postfix::params::ssl_dir,
-  Hash    $create_resources   = {},
-) inherits ::postfix::params {
+  Array   $packages         = ['postfix'],
+  String  $package_ensure   = 'present',
+  Hash    $parameters       = {},
+  Hash    $services         = {},
+  Hash    $maps             = {},
+  String  $map_dir          = '/etc/postfix/maps',
+  String  $postmap_command  = '/usr/sbin/postmap',
+  String  $ssl_dir          = '/etc/postfix/ssl',
+  Hash    $create_resources = {},
+  String  $master_cf_file   = '/etc/postfix/master.cf',
+  String  $main_cf_file     = '/etc/postfix/main.cf',
+  String  $owner            = 'root',
+  String  $group            = 'root',
+  String  $mode             = '0644',
+) {
 
   Package<|tag == 'postfix-packages'|> -> File[ $map_dir, $ssl_dir ]
 
@@ -44,22 +46,36 @@ class postfix (
 
   file { [ $map_dir, $ssl_dir ]:
     ensure => directory,
-    owner  => $postfix::params::owner,
-    group  => $postfix::params::group,
+    owner  => $owner,
+    group  => $group,
     mode   => '0755',
   }
 
   include ::postfix::service
 
   class { '::postfix::config::main' :
-    parameters => $parameters,
+    parameters   => $parameters,
+    main_cf_file => $main_cf_file,
+    owner        => $owner,
+    group        => $group,
+    mode         => $mode,
   }
 
   class { '::postfix::config::master' :
-    services => $services,
+    services       => $services,
+    master_cf_file => $master_cf_file,
+    owner          => $owner,
+    group          => $group,
+    mode           => $mode,
   }
 
-  create_resources('::postfix::map', $maps)
+  create_resources('::postfix::map', $maps, {
+    map_dir         => $map_dir,
+    postmap_command => $postmap_command,
+    owner           => $owner,
+    group           => $group,
+    mode            => $mode,
+  })
 
   # create generic resources (eg. to retrieve certificate)
   $create_resources.each | $res, $vals | {

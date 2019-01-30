@@ -1,6 +1,15 @@
 ---
 # OpenBSD-family.yaml for postfix module
 
+postfix::postmap_command: '/usr/local/sbin/postmap'
+postfix::group: 'wheel'
+
+postfix::service::exec_postfix_enable: true
+postfix::service::disabled_services: 
+   - 'smtpd'
+postfix::service::sync_chroot: '/var/spool/postfix'
+
+
 postfix::parameters:
    mail_owner:
       comments:

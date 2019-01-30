@@ -4,6 +4,14 @@ require 'spec_helper'
 describe 'postfix::map' do
   let(:pre_condition) { 'service {"postfix": }' }
   let :facts do  { :osfamily => 'Debian' } end
+  let :default_params do
+    { :map_dir         => '/etc/postfix/maps',
+      :postmap_command => '/usr/sbin/postmap',
+      :owner           => 'root',
+      :group           => 'root',
+      :mode            => '0644',
+    }
+  end
 
   shared_examples 'postfix::map define' do
 
@@ -34,6 +42,7 @@ describe 'postfix::map' do
 
   context 'whith defaults' do
     let (:title) { 'mymap' }
+    let (:params) { default_params }
 
     it_behaves_like 'postfix::map define'
 
@@ -42,6 +51,9 @@ describe 'postfix::map' do
   context 'on OpenBSD' do
     let :facts do  { :osfamily => 'OpenBSD' } end
     let (:title) { 'openBSD' }
+    let (:params) do
+      default_params.merge( :group => 'wheel' )
+    end
 
     context 'it includes map file' do
       it { is_expected.to contain_concat('/etc/postfix/maps/' + title)
@@ -57,8 +69,7 @@ describe 'postfix::map' do
   context 'whith content defined' do
     let (:title) { 'map_with_content' }
     let :params do
-      { :contents => ['blah1', 'blah2'],
-      }
+       default_params.merge( :contents => ['blah1', 'blah2'] )
     end
 
     it_behaves_like 'postfix::map define'
@@ -70,9 +81,8 @@ describe 'postfix::map' do
 
   context 'whith source defined' do
     let (:title) { 'map_with_source' }
-    let :params do
-      { :source => 'a_source',
-      }
+    let :params do 
+       default_params.merge( :source => 'a_source')
     end
 
     it_behaves_like 'postfix::map define'
@@ -84,10 +94,8 @@ describe 'postfix::map' do
 
   context 'whith btree map type' do
     let (:title) { 'dbm_map_type' }
-
-    let :params do
-      { :type         => 'btree',
-      }
+    let :params do 
+      default_params.merge(:type => 'btree')
     end
     it_behaves_like 'postfix::map define'
 
@@ -101,9 +109,10 @@ describe 'postfix::map' do
   context 'whith custom map path and name' do
     let (:title) { 'custom_map_path_and_name' }
     let :params do
-      { :map_dir         => '/blah/fasel',
+       default_params.merge(
+        :map_dir         => '/blah/fasel',
 	:map_name        => 'myname',
-      }
+      )
     end
     context 'it includes map file' do
       it { is_expected.to contain_concat('/blah/fasel/myname')
@@ -128,8 +137,9 @@ describe 'postfix::map' do
   context 'whith custom map path' do
     let (:title) { 'custom_map_path' }
     let :params do
-      { :map_dir         => '/blah/fasel',
-      }
+      default_params.merge(
+        :map_dir         => '/blah/fasel',
+      )
     end
     context 'it includes map file' do
       it { is_expected.to contain_concat('/blah/fasel/custom_map_path')
@@ -155,8 +165,9 @@ describe 'postfix::map' do
     let (:title) { 'custom_postmap' }
 
     let :params do
-      { :postmap_command      => 'my_postmap_command',
-      }
+      default_params.merge(
+        :postmap_command      => 'my_postmap_command',
+      )
     end
 
     context 'rebuild map' do
@@ -174,8 +185,9 @@ describe 'postfix::map' do
     let (:title) { 'unknown_map_type' }
 
     let :params do
-      { :type         => 'fifo',
-      }
+      default_params.merge(
+        :type         => 'fifo',
+      )
     end
 
     it { is_expected.to_not contain_exec('rebuild map ' + title)

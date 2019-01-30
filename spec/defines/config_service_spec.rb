@@ -3,6 +3,10 @@ require 'spec_helper'
 
 describe 'postfix::config::service' do
   let :facts do  { :osfamily => 'Debian' } end
+  let :default_params do
+    { :master_cf_file => '/etc/postfix/master.cf',
+    }
+  end
 
   shared_examples 'postfix::config::service define' do
 
@@ -20,6 +24,7 @@ describe 'postfix::config::service' do
 
   context 'whith defaults' do
     let (:title) { 'debian' }
+    let (:params) { default_params }
 
     it_behaves_like 'postfix::config::service define'
 
@@ -28,6 +33,7 @@ describe 'postfix::config::service' do
   context 'on OpenBSD' do
     let (:title) { 'openbsd' }
     let :facts do  { :osfamily => 'OpenBSD' } end
+    let (:params) { default_params }
 
     it_behaves_like 'postfix::config::service define'
 
@@ -37,11 +43,12 @@ describe 'postfix::config::service' do
     let (:title) { 'my-repo' }
 
     let :params do
-      { :type          => 'fifo',
+       default_params.merge( 
+        :type          => 'fifo',
         :command       => 'fork',
         :service_names => [ 'bah' ],
 	:order         => '100',
-      }
+      )
     end
     it_behaves_like 'postfix::config::service define'
 

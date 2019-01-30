@@ -30,6 +30,13 @@ describe 'postfix::service' do
 
    describe 'on OpenBSD' do
      let :facts do  { :osfamily => 'OpenBSD' } end
+     let :params do
+       { :disabled_services   => ['smtpd'],
+         :exec_postfix_enable => true,
+         :sync_chroot         => '/var/spool/postfix',
+       }
+     end
+
      it_behaves_like 'postfix::service class'
 
      it { is_expected.to contain_service('smtpd')

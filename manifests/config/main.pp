@@ -21,10 +21,6 @@
 #  $parameters
 #    The parameters to set in the main.cf file
 #    Defaults to {}
-#  $local_parameters
-#    another posibility to set parameters.
-#    thought for local changes (eg on node level)
-#    Defaults to {}
 #
 class postfix::config::main (
   String $main_cf_file     = $postfix::params::main_cf_file,
@@ -32,18 +28,15 @@ class postfix::config::main (
   String $group            = $postfix::params::group,
   String $mode             = $postfix::params::mode,
   Hash   $parameters       = {},
-  Hash   $local_parameters = {},
 ) inherits ::postfix::params {
 
   Package<|tag == 'postfix-packages'|> -> File[ $main_cf_file ]
-
-  $_parameters=merge($parameters, $local_parameters)
 
   file { $main_cf_file :
     owner   => $owner,
     group   => $group,
     mode    => $mode,
-    content => epp('postfix/main.cf.epp',{ parameters => $_parameters } ),
+    content => epp('postfix/main.cf.epp',{ parameters => $parameters } ),
     notify  => Service['postfix'],
   }
 

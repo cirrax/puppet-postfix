@@ -16,23 +16,21 @@
 ## Overview
 
 The purpose of this module is to configure postfix. It allows you to specify two postfix configurations in hiera. 
-The possibilities of the two configurations are equal. For readability one is called server (the main mailserver) the other satellite (systems, that send all mail to the
-mailserver). Configuration option can be inherited from the main class to shorten the hiera configuration.
+
+Version 2.x.x and above does not use two separated classes for server and satellige. instead use hiera to overwrite configs.
+Version 2.x.x and above does not merge parameters in code anymore, instead hiera merge is used.
 
 ## Usage
 
 The all available options for classes and defines are documented in the header of the class/define files. See there for any details.
 
 ### postfix configuration
-To use, include the postfix class. By default this will install the satellite configuration. If you want to use the server configuration
-set $postfix::is\_satellite to false.
+To use, include the postfix class.
 
-To set the values for the satellite, use postfix::satellite::XXXX for the server use postfix::server:XXXX. All values are also 
-available in the postfix class as postfix::common_XXXX. These will be inherited to postfix::satellite and postfx::server class.
 
 #### To set parameters in main.cf file, use:
 
-    postfix::common_parameters: # or use postfix::satellite::parameters:/postfix::server::parameters
+    postfix::parameters: 
         bounce_size_limit:
           comments:
             - 'The maximal amount of original message text that is sent in a'
@@ -46,7 +44,7 @@ available in the postfix class as postfix::common_XXXX. These will be inherited 
       
 if you do not like to have a comment you can also set:
   
-    postfix::common_parameters:
+    postfix::parameters:
       bounce_size_limit: 50000
       header_size_limit: 102400
   
@@ -54,7 +52,7 @@ if you do not like to have a comment you can also set:
 
 To add a service in master.cf file use:
 
-    postfix::common_services: # or use postfix::satellite::services or postfix::server::services:
+    postfix::services:
       smtp:
         type: 'inet',
         priv: 'n',
@@ -68,7 +66,7 @@ To add a service in master.cf file use:
 
 simple lookup maps can be created using:
 
-    postfix::common_maps: # or use postfix::satellite:maps or postfix::server::maps:
+    postfix::maps:
       regex_sender_canonical:
         type: 'regex'
         contents:

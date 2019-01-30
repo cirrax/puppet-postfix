@@ -36,11 +36,12 @@ class postfix::service(
   Boolean $ensure_syslog_flag  = $postfix::params::ensure_syslog_flag,
 ) inherits postfix::params {
 
+  Package<|tag == 'postfix-packages'|> -> Service['postfix']
+
   service{'postfix':
     ensure  => $service_ensure,
     name    => $service_name,
     enable  => $service_enable,
-    require => Package['postfix'],
   }
 
   service {$disabled_services :

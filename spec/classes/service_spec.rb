@@ -15,7 +15,6 @@ describe 'postfix::service' do
           :name   => 'postfix',
           :ensure => 'running',
           :enable => true,
-	  :require => 'Package[postfix]'
         )
     end
   end

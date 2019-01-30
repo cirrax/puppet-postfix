@@ -1,0 +1,23 @@
+---
+# OpenBSD-family.yaml for postfix module
+
+postfix::parameters:
+   mail_owner:
+      comments:
+         - 'Only set this on OpenBSD, since it is not default'
+      value: '_postfix'
+
+   setgid_group:
+      comments:
+         - 'Only set this on OpenBSD, since it is not default'
+      value: '_postdrop'
+
+   daemon_directory:
+      comments:
+         - 'Only set this on OpenBSD, since it is not default'
+      value: '/usr/local/libexec/postfix'
+
+   command_directory:
+      comments:
+         - 'Only set this on OpenBSD, since it is not default'
+      value: '/usr/local/sbin'

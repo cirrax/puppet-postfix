@@ -1,0 +1,13 @@
+---
+version: 5
+
+defaults:
+  datadir: 'data'
+  data_hash: 'yaml_data'
+
+hierarchy:
+  - name: 'module postfix, os-family'
+    path: '%{facts.os.family}-family.yaml'
+
+  - name: 'module postfix, common'
+    glob: 'common/*.yaml'

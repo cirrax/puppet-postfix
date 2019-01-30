@@ -1,0 +1,28 @@
+---
+# common/parameters.yaml for postfix module
+
+postfix::parameters:
+   myhostname:
+      comments:
+         - 'The internet hostname of this mail system'
+      value: "%{fqdn}"
+
+   myorigin: "%{fqdn}"
+
+   mydestination:
+      - "%{fqdn}"
+      - "%{hostname}"
+      - 'localhost'
+
+   mynetworks:
+      - '127.0.0.0/8'
+      - '[::ffff:127.0.0.0]/104'
+      - '[::1]/128'
+
+   append_dot_mydomain:
+      comments:
+         - 'appending .domain is the MUAs job.'
+      value: 'no'
+
+   smtpd_banner:
+      value: '$myhostname ESMTP $mail_name'

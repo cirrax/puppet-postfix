@@ -17,7 +17,7 @@
 
 The purpose of this module is to configure postfix. It allows you to specify two postfix configurations in hiera. 
 
-Version 2.x.x and above does not use two separated classes for server and satellige. instead use hiera to overwrite configs.
+Version 2.x.x and above does not use two separated classes for server and satellige like it was done in 1.x.x versions. Instead hiera is used to overwrite configs.
 Version 2.x.x and above does not merge parameters in code anymore, instead hiera merge is used.
 
 ## Usage
@@ -27,8 +27,7 @@ The all available options for classes and defines are documented in the header o
 ### postfix configuration
 To use, include the postfix class.
 
-
-#### To set parameters in main.cf file, use:
+#### To set parameters in main.cf file, use hiera:
 
     postfix::parameters: 
         bounce_size_limit:
@@ -47,7 +46,15 @@ if you do not like to have a comment you can also set:
     postfix::parameters:
       bounce_size_limit: 50000
       header_size_limit: 102400
-  
+
+Do deactivate a parameter that has been set by default, use:
+
+    postfix::parameters:
+      mydestination:
+        deactivate: true
+
+Pervices are hash merged in hiera.
+
 #### To set services in master.cf file use:
 
 To add a service in master.cf file use:
@@ -62,9 +69,11 @@ To add a service in master.cf file use:
         chroot: 'y'
         command: 'trivial-rewrite'
 
+Services are hash merged in hiera and can be deacitvated and removed from hiera.
+
 #### create lookup maps:
 
-simple lookup maps can be created using:
+Simple lookup maps can be created using:
 
     postfix::maps:
       regex_sender_canonical:
@@ -77,6 +86,8 @@ simple lookup maps can be created using:
           - 'user1          user1@cirrax.com'
           - 'user2          user2@cirrax.com'
 
+Maps are hash merged in hiera.
+
 To use them use set the parameters in master.cf accordingly.
 
 ## Contributing
@@ -86,7 +97,6 @@ Please report bugs and feature request using GitHub issue tracker.
 For pull requests, it is very much appreciated to check your Puppet manifest with puppet-lint
 and the available spec tests  in order to follow the recommended Puppet style guidelines
 from the Puppet Labs style guide.
-
 
 ### Authors
 

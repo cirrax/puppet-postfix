@@ -61,10 +61,10 @@ To add a service in master.cf file use:
 
     postfix::services:
       smtp:
-        type: 'inet',
-        priv: 'n',
-        chroot: 'y',
-        command: 'smtpd',
+        type: 'inet'
+        priv: 'n'
+        chroot: 'y'
+        command: 'smtpd'
       rewrite:
         chroot: 'y'
         command: 'trivial-rewrite'

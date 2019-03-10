@@ -5,33 +5,35 @@
 # See /usr/share/postfix/main.cf.dist for a commented, more complete version
 
 <% $parameters.each | $index, $value | { -%>
+  <%- if ( $value =~ String ) { -%><%= $index %> = <%= $value %>
+  <%- } -%>
+  <%- if ( $value =~ Integer ) { -%><%= $index %> = <%= $value %>
+  <%- } -%>
+  <%- if ( $value =~ Array ) { -%><%= $index %> = <%= $value.join("\n        ") %>
+  <%- } -%>
+  <%- if ( $value =~ Hash ) { -%>
+    <%- if $value['comments'] { -%>
+      <%- $value['comments'].each | $comment | { -%>
+        <%- %># <%= $comment %>
+      <%- } -%>
+    <%- } -%>
+    <%- if $value['deactive'] { -%>
+      <%- if ( $value['value'] =~ String ) { -%># <%= $index %> = <%= $value['value'] %>
+      <%- } -%>
+      <%- if ( $value['value'] =~ Integer ) { -%># <%= $index %> = <%= $value['value'] %>
+      <%- } -%>
+      <%- if ( $value['value'] =~ Array ) { -%># <%= $index %> = <%= $value['value'].join("\n#      ") %>
+      <%- } -%>
+    <%- } else { -%>
+      <%- if ( $value['value'] =~ String ) { -%><%= $index %> = <%= $value['value'] %>
+      <%- } -%>
+      <%- if ( $value['value'] =~ Integer ) { -%><%= $index %> = <%= $value['value'] %>
+      <%- } -%>
+      <%- if ( $value['value'] =~ Array ) { -%><%= $index %> = <%= $value['value'].join("\n     ") %>
+      <%- } -%>
+    <%- } -%>
+  <%- } -%>
+  <%- if $value { -%>
 
-<% if ( $value =~ String ) { -%><%= $index %> = <%= $value %>
-<% } -%>
-<% if ( $value =~ Integer ) { -%><%= $index %> = <%= $value %>
-<% } -%>
-<% if ( $value =~ Array ) { -%><%= $index %> = <%= $value.join("\n        ") %>
-<% } -%>
-<% if ( $value =~ Hash ) { -%>
-<% if $value['comments'] { -%>
-<% $value['comments'].each | $comment | { -%>
-# <%= $comment %>
-<% } -%>
-<% } -%>
-<% if $value['deactive'] { -%>
-<% if ( $value['value'] =~ String ) { -%># <%= $index %> = <%= $value['value'] %>
-<% } -%>
-<% if ( $value['value'] =~ Integer ) { -%># <%= $index %> = <%= $value['value'] %>
-<% } -%>
-<% if ( $value['value'] =~ Array ) { -%># <%= $index %> = <%= $value['value'].join("\n#      ") %>
-<% } -%>
-<% } else { -%>
-<% if ( $value['value'] =~ String ) { -%><%= $index %> = <%= $value['value'] %>
-<% } -%>
-<% if ( $value['value'] =~ Integer ) { -%><%= $index %> = <%= $value['value'] %>
-<% } -%>
-<% if ( $value['value'] =~ Array ) { -%><%= $index %> = <%= $value['value'].join("\n     ") %>
-<% } -%>
-<% } -%>
-<% } -%>
+  <%- } -%>
 <% } -%>

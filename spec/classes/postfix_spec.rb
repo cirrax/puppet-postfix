@@ -3,10 +3,6 @@
 require 'spec_helper'
 
 describe 'postfix' do
-  let :facts do
-    { osfamily: 'Debian' }
-  end
-
   shared_examples_for 'postfix server' do
     it { is_expected.to compile.with_all_deps }
 
@@ -20,83 +16,60 @@ describe 'postfix' do
     }
   end
 
-  describe 'without parameters' do
-    it_behaves_like 'postfix server'
+  on_supported_os.each do |os, os_facts|
+    context "on #{os}" do
+      let(:facts) { os_facts }
 
-    it {
-      is_expected.to contain_file('/etc/postfix/ssl')
-        .with(ensure: 'directory',
-              owner: 'root',
-              group: 'root',
-              mode: '0755')
-    }
-    it {
-      is_expected.to contain_file('/etc/postfix/maps')
-        .with(ensure: 'directory',
-              owner: 'root',
-              group: 'root',
-              mode: '0755')
-    }
-  end
+      describe 'without parameters' do
+        it_behaves_like 'postfix server'
+        it {
+          is_expected.to contain_file('/etc/postfix/ssl')
+            .with(ensure: 'directory',
+                  owner: 'root',
+                  mode: '0755')
+        }
+        it {
+          is_expected.to contain_file('/etc/postfix/maps')
+            .with(ensure: 'directory',
+                  owner: 'root',
+                  mode: '0755')
+        }
+      end
 
-  describe 'with server package' do
-    let :params do
-      { packages: ['mypackage', 'postfix'] }
+      describe 'with server package' do
+        let :params do
+          { packages: ['mypackage', 'postfix'] }
+        end
+
+        it_behaves_like 'postfix server'
+
+        it {
+          is_expected.to contain_package('mypackage')
+            .with(ensure: 'present',
+                  tag: 'postfix-packages')
+        }
+      end
+
+      describe 'with maps' do
+        let :params do
+          { maps: { 'test-map' => {} } }
+        end
+
+        it_behaves_like 'postfix server'
+
+        it { is_expected.to contain_postfix__map('test-map') }
+      end
+
+      describe 'with additional resources' do
+        # use user resource to test (resource needs to be available)
+        let :params do
+          { create_resources: { 'user' => { 'usertitle' => {} } } }
+        end
+
+        it_behaves_like 'postfix server'
+
+        it { is_expected.to contain_user('usertitle') }
+      end
     end
-
-    it_behaves_like 'postfix server'
-
-    it {
-      is_expected.to contain_package('mypackage')
-        .with(ensure: 'present',
-              tag: 'postfix-packages')
-    }
-  end
-
-  describe 'with maps' do
-    let :params do
-      { maps: { 'test-map' => {} } }
-    end
-
-    it_behaves_like 'postfix server'
-
-    it { is_expected.to contain_postfix__map('test-map') }
-  end
-
-  describe 'with additional resources' do
-    # use user resource to test (resource needs to be available)
-    let :params do
-      { create_resources: { 'user' => { 'usertitle' => {} } } }
-    end
-
-    it_behaves_like 'postfix server'
-
-    it { is_expected.to contain_user('usertitle') }
-  end
-
-  describe 'on OpenBSD' do
-    let :facts do
-      { osfamily: 'OpenBSD' }
-    end
-    let :params do
-      { group: 'wheel' }
-    end
-
-    it_behaves_like 'postfix server'
-
-    it {
-      is_expected.to contain_file('/etc/postfix/ssl')
-        .with(ensure: 'directory',
-              owner: 'root',
-              group: 'wheel',
-              mode: '0755')
-    }
-    it {
-      is_expected.to contain_file('/etc/postfix/maps')
-        .with(ensure: 'directory',
-              owner: 'root',
-              group: 'wheel',
-              mode: '0755')
-    }
   end
 end

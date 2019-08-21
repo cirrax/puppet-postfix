@@ -2,9 +2,6 @@
 require 'spec_helper'
 
 describe 'postfix::config::service' do
-  let :facts do
-    { osfamily: 'Debian' }
-  end
   let :default_params do
     { master_cf_file: '/etc/postfix/master.cf' }
   end
@@ -22,35 +19,31 @@ describe 'postfix::config::service' do
     end
   end
 
-  context 'whith defaults' do
-    let(:title) { 'debian' }
-    let(:params) { default_params }
+  on_supported_os.each do |os, os_facts|
+    context "on #{os}" do
+      let(:facts) { os_facts }
 
-    it_behaves_like 'postfix::config::service define'
-  end
+      context 'whith defaults' do
+        let(:title) { 'debian' }
+        let(:params) { default_params }
 
-  context 'on OpenBSD' do
-    let(:title) { 'openbsd' }
-    let :facts do
-      { osfamily: 'OpenBSD' }
+        it_behaves_like 'postfix::config::service define'
+      end
+
+      context 'whith non defaults' do
+        let(:title) { 'my-repo' }
+
+        let :params do
+          default_params.merge(
+            type: 'fifo',
+            command: 'fork',
+            service_names: ['bah'],
+            order: '100',
+          )
+        end
+
+        it_behaves_like 'postfix::config::service define'
+      end
     end
-    let(:params) { default_params }
-
-    it_behaves_like 'postfix::config::service define'
-  end
-
-  context 'whith non defaults' do
-    let(:title) { 'my-repo' }
-
-    let :params do
-      default_params.merge(
-        type: 'fifo',
-        command: 'fork',
-        service_names: ['bah'],
-        order: '100',
-      )
-    end
-
-    it_behaves_like 'postfix::config::service define'
   end
 end

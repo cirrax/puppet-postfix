@@ -1,4 +1,4 @@
-
+#
 class postfix::config::master (
   String $master_cf_file,
   String $owner,

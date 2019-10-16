@@ -73,11 +73,11 @@ define postfix::map (
 
   if $ext != 'unknown' {
     exec { "rebuild map ${title}":
-      command     => "${postmap_command} ${type}:${filename}",
-      subscribe   => Concat[$filename],
-      refreshonly => true,
-      creates     => "${filename}.${ext}",
-      notify      => Service['postfix'],
+      command => "${postmap_command} ${type}:${filename}",
+      require => Concat[$filename],
+      unless  => "test ${filename}.${ext} -nt ${filename}",
+      path    => '/bin:/usr/bin:/sbin:/usr/sbin',
+      notify  => Service['postfix'],
     }
   }
 }

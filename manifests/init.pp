@@ -1,23 +1,39 @@
 #
-# Main class
+# configure postfix, main class
 #
-# Parameters:
-#   $packages
-#     packagase to install
-#   $package_ensure
-#     defaults to 'install'
-#   $parameters:
-#     Hash of parameters for server
-#   $services:
-#     Hash of services for server
-#     Defaults to {}
-#   $maps:
-#     Hash of maps to generate 
-#     Defaults to {}     
-#   $map_dir:
-#     directory for maps to create
-#   $ssl_dir:
-#     directory for ssl to create
+# @example
+#   include postfix
+#
+# @param packages 
+#   packages to install
+# @param package_ensure
+#   defaults to 'install'
+# @param parameters
+#   Hash of parameters for server
+# @param services
+#   Hash of services for server
+#   Defaults to {}
+# @param maps
+#   Hash of maps to generate 
+#   Defaults to {}     
+# @param map_dir
+#   directory for maps to create
+# @param ssl_dir
+#   directory for ssl to create
+# @param owner
+#   file and directory owner
+# @param group
+#   file and directory group
+# @param mode
+#   file mode
+# @param postmap_command
+#   the postmap command to use
+# @param create_resources
+#   generic create_resources (for certificates etc)
+# @param master_cf_file
+#   filename and path to master.cf file
+# @param main_cf_file
+#   filename and path to main.cf file
 #
 class postfix (
   Array   $packages         = ['postfix'],

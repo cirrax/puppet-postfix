@@ -28,11 +28,10 @@ describe 'postfix::map' do
     context 'rebuild map' do
       it {
         is_expected.to contain_exec('rebuild map ' + title)
-          .with_refreshonly(true)
           .with_command(%r{postmap})
-          .with_subscribe('Concat[/etc/postfix/maps/' + title + ']')
+          .with_require('Concat[/etc/postfix/maps/' + title + ']')
           .with_notify('Service[postfix]')
-          .with_creates('/etc/postfix/maps/' + title + '.db')
+          .with_unless(%r{/etc/postfix/maps/#{title}.db})
       }
     end
   end
@@ -113,10 +112,10 @@ describe 'postfix::map' do
         context 'rebuild map' do
           it {
             is_expected.to contain_exec('rebuild map custom_map_path_and_name')
-              .with_refreshonly(true)
               .with_command('/usr/sbin/postmap hash:/blah/fasel/myname')
-              .with_subscribe('Concat[/blah/fasel/myname]')
+              .with_require('Concat[/blah/fasel/myname]')
               .with_notify('Service[postfix]')
+              .with_unless(%r{/blah/fasel/myname.(db|cdb|pag)})
           }
         end
       end
@@ -142,10 +141,10 @@ describe 'postfix::map' do
         context 'rebuild map' do
           it {
             is_expected.to contain_exec('rebuild map custom_map_path')
-              .with_refreshonly(true)
               .with_command('/usr/sbin/postmap hash:/blah/fasel/custom_map_path')
-              .with_subscribe('Concat[/blah/fasel/custom_map_path]')
+              .with_require('Concat[/blah/fasel/custom_map_path]')
               .with_notify('Service[postfix]')
+              .with_unless(%r{/blah/fasel/#{title}.db})
           }
         end
       end
@@ -162,10 +161,10 @@ describe 'postfix::map' do
         context 'rebuild map' do
           it {
             is_expected.to contain_exec('rebuild map custom_postmap')
-              .with_refreshonly(true)
               .with_command('my_postmap_command hash:/etc/postfix/maps/custom_postmap')
-              .with_subscribe('Concat[/etc/postfix/maps/custom_postmap]')
+              .with_require('Concat[/etc/postfix/maps/custom_postmap]')
               .with_notify('Service[postfix]')
+              .with_unless(%r{/etc/postfix/maps/#{title}.db})
           }
         end
       end

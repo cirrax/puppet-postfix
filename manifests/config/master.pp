@@ -1,4 +1,16 @@
 #
+# configure master.cf
+#
+# @param master_cf_file
+#   name and path for master.cf file
+# @param owner
+#   owner of master.cf
+# @param group
+#   group of master.cf
+# @param mode
+#   file mode of master.cf
+# @param services
+#   services to configure (also see README)
 class postfix::config::master (
   String $master_cf_file,
   String $owner,

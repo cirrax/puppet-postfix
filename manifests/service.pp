@@ -1,21 +1,20 @@
 #
 # create the postfix Service
 #
-# Parameters:
-# $service_name
+# @param service_name
 #   The name of the service
-# $service_ensure 
+# @param service_ensure 
 #   state of the service.
-# $service_enable
+# @param service_enable
 #   if service should be enabled
-# $disabled_services
+# @param disabled_services
 #   Array of Services to stop
-# $exec_postfix_enable
+# @param exec_postfix_enable
 #   if set to true, we run postfix-enable
-# $sync_chroot
+# @param sync_chroot
 #   if set to a path, the according chroot 
 #   is synced.
-# $ensure_syslog_flag
+# @param ensure_syslog_flag
 #   if set to true, and sync_chroot is choosen,
 #   a flag is set to allow logging from chroot
 #   this is very OpenBSD specific !

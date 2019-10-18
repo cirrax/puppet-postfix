@@ -4,23 +4,27 @@
 # parameter or use your own concat::fragment
 # resources to add content to the map.
 #
-# Parameters
-#
-# $map_dir
+# @param map_dir
 #   the directory to create the map in
-# $postmap_command
+# @param postmap_command
 #   postmap command
-# $map_name
+# @param map_name
 #   The name of the map defaults to $title
-# $type
+# @param type
 #   the type of the map
 #   defaults to hash
-# $source
+# @param source
 #   source of the map
 #   defaults to ''
-# $contents
+# @param contents
 #   Array of lines to add to the map
 #   defaults to []
+# @param owner
+#   owner of the map file
+# @param group
+#   group of the map file
+# @param mode
+#   file mode of the map file
 #
 define postfix::map (
   String $map_dir,

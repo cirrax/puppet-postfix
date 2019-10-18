@@ -1,6 +1,6 @@
 {
   "name": "cirrax-postfix",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "author": "Cirrax GmbH",
   "summary": "A module to configure postfix mail",
   "license": "GPL-3.0",

@@ -1,0 +1,165 @@
+# Debian.yaml for postfix module
+postfix::parameters:
+  biff: 'no'
+  mtpd_tls_cert_file: '/etc/ssl/certs/ssl-cert-snakeoil.pem'
+  smtpd_tls_key_file: '/etc/ssl/private/ssl-cert-snakeoil.key'
+  smtpd_use_tls: 'yes'
+  smtpd_tls_session_cache_database : 'btree:${data_directory}/smtpd_scache'
+  smtp_tls_session_cache_database : 'btree:${data_directory}/smtp_scache'
+  smtpd_relay_restrictions : 'permit_mynetworks permit_sasl_authenticated defer_unauth_destination'
+  alias_database: 'hash:/etc/aliases'
+  recipient_delimiter: '+'
+  mailbox_size_limit: '0'
+
+postfix::services:
+  smtp:
+    type: 'inet'
+    priv: 'n'
+    chroot: 'y'
+    command: 'smtpd'
+    order: '60_100'
+  pickup:
+    priv: 'n'
+    chroot: 'y'
+    wakeup: '60'
+    maxproc: '1'
+    order: '60_102'
+  cleanup:
+    priv: 'n'
+    chroot: 'y'
+    maxproc: '0'
+    order: '60_104'
+  qmgr:
+    priv: 'n'
+    chroot: 'n'
+    wakeup: '300'
+    maxproc: '1'
+    order: '60_106'
+  tlsmgr:
+    chroot: 'y'
+    wakeup: '1000?'
+    maxproc: '1'
+    order: '60_108'
+  rewrite:
+    chroot: 'y'
+    command: 'trivial-rewrite'
+    order: '60_110'
+  bounce:
+    chroot: 'y'
+    maxproc: '0'
+    order: '60_112'
+  defer:
+    chroot: 'y'
+    maxproc: '0'
+    command: 'bounce'
+    order: '60_114'
+  trace:
+    chroot: 'y'
+    maxproc: '0'
+    command: 'bounce'
+    order: '60_116'
+  verify:
+    chroot: 'y'
+    maxproc: '1'
+    order: '60_118'
+  flush:
+    priv: 'n'
+    chroot: 'y'
+    maxproc: '0'
+    wakeup: '1000?'
+    order: '60_120'
+  proxymap:
+    chroot: 'n'
+    order: '60_122'
+  proxywrite:
+    chroot: 'n'
+    maxproc: '1'
+    command: 'proxymap'
+    order: '60_124'
+  smtp-unix:
+    service_names: ['smtp']
+    chroot: 'y'
+    command: 'smtp'
+    order: '60_126'
+  relay:
+    chroot: 'y'
+    command: 'smtp'
+    order: '60_128'
+  showq:
+    priv: 'n'
+    chroot: 'y'
+    order: '60_130'
+  error:
+    chroot: 'y'
+    order: '60_132'
+  retry:
+    chroot: 'y'
+    command: 'error'
+    order: '60_134'
+  discard:
+    chroot: 'y'
+    order: '60_136'
+  local:
+    unpriv: 'n'
+    chroot: 'n'
+    order: '60_138'
+  virtual:
+    unpriv: 'n'
+    chroot: 'n'
+    order: '60_140'
+  lmtp:
+    chroot: 'y'
+    order: '60_142'
+  anvil:
+    chroot: 'y'
+    maxproc: '1'
+    order: '60_144'
+  scache:
+    chroot: 'y'
+    maxproc: '1'
+    order: '60_146'
+  maildrop:
+    unpriv: 'n'
+    chroot: 'n'
+    order: '60_148'
+    command: 'pipe'
+    args:
+      - 'flags=DRhu user=vmail argv=/usr/bin/maildrop -d ${recipient}'
+  uucp:
+    unpriv: 'n'
+    chroot: 'n'
+    order: '60_150'
+    command: 'pipe'
+    args:
+      - 'flags=Fqhu user=uucp argv=uux -r -n -z -a$sender - $nexthop!rmail ($recipient)'
+  ifmail:
+    unpriv: 'n'
+    chroot: 'n'
+    order: '60_152'
+    command: 'pipe'
+    args:
+      - 'flags=F user=ftn argv=/usr/lib/ifmail/ifmail -r $nexthop ($recipient)'
+  bsmtp:
+    unpriv: 'n'
+    chroot: 'n'
+    order: '60_154'
+    command: 'pipe'
+    args:
+      - 'flags=Fq. user=bsmtp argv=/usr/lib/bsmtp/bsmtp -t$nexthop -f$sender $recipient'
+  scalemail-backend:
+    unpriv: 'n'
+    chroot: 'n'
+    maxproc: '2'
+    order: '60_156'
+    command: 'pipe'
+    args:
+      - 'flags=R user=scalemail argv=/usr/lib/scalemail/bin/scalemail-store ${nexthop} ${user} ${extension}'
+  mailman:
+    unpriv: 'n'
+    chroot: 'n'
+    order: '60_160'
+    command: 'pipe'
+    args:
+      - 'flags=FR user=list argv=/usr/lib/mailman/bin/postfix-to-mailman.py'
+      - '${nexthop} ${user}'
+

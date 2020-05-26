@@ -1,0 +1,19 @@
+postfix::parameters:
+  compatibility_level: '2'
+
+postfix::services:
+  relay:
+    chroot: 'y'
+    command: 'smtp'
+    order: '60_128'
+    args:
+      - '-o syslog_name=postfix/$service_name'
+  postlog:
+    type: 'unix-dgram'
+    priv: 'n'
+    chroot: 'n'
+    maxproc: '1'
+    order: '60_147'
+    command: 'postlogd'
+
+

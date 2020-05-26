@@ -1,0 +1,8 @@
+postfix::services:
+  relay:
+    chroot: 'n'
+    command: 'smtp'
+    order: '60_128'
+    args:
+      - '-o syslog_name=postfix/$service_name'
+

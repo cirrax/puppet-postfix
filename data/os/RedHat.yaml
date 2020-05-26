@@ -1,0 +1,118 @@
+# RedHat.yaml for postfix module
+postfix::parameters:
+  inet_interfaces: 'localhost'
+  inet_protocols: 'all'
+  alias_maps: 'hash:/etc/aliases'
+  debugger_command: 'PATH=/bin:/usr/bin:/usr/local/bin:/usr/X11R6/bin; ddd $daemon_directory/$process_name $process_id & sleep 5'
+  sendmail_path: '/usr/sbin/sendmail.postfix'
+  newaliases_path: '/usr/bin/newaliases.postfix'
+  mailq_path: '/usr/bin/mailq.postfix'
+  manpage_directory: '/usr/share/man'
+
+postfix::services:
+  smtp:
+    type: 'inet'
+    priv: 'n'
+    chroot: 'n'
+    command: 'smtpd'
+    order: '60_100'
+  pickup:
+    priv: 'n'
+    chroot: 'n'
+    wakeup: '60'
+    maxproc: '1'
+    order: '60_102'
+  cleanup:
+    priv: 'n'
+    chroot: 'n'
+    maxproc: '0'
+    order: '60_104'
+  qmgr:
+    priv: 'n'
+    chroot: 'n'
+    wakeup: '300'
+    maxproc: '1'
+    order: '60_106'
+  tlsmgr:
+    chroot: 'n'
+    wakeup: '1000?'
+    maxproc: '1'
+    order: '60_108'
+  rewrite:
+    chroot: 'n'
+    command: 'trivial-rewrite'
+    order: '60_110'
+  bounce:
+    chroot: 'n'
+    maxproc: '0'
+    order: '60_112'
+  defer:
+    chroot: 'n'
+    maxproc: '0'
+    command: 'bounce'
+    order: '60_114'
+  trace:
+    chroot: 'n'
+    maxproc: '0'
+    command: 'bounce'
+    order: '60_116'
+  verify:
+    chroot: 'n'
+    maxproc: '1'
+    order: '60_118'
+  flush:
+    priv: 'n'
+    chroot: 'n'
+    maxproc: '0'
+    wakeup: '1000?'
+    order: '60_120'
+  proxymap:
+    chroot: 'n'
+    order: '60_122'
+  proxywrite:
+    chroot: 'n'
+    maxproc: '1'
+    command: 'proxymap'
+    order: '60_124'
+  smtp-unix:
+    service_names: ['smtp']
+    chroot: 'n'
+    command: 'smtp'
+    order: '60_126'
+  relay:
+    chroot: 'n'
+    command: 'smtp'
+    order: '60_128'
+  showq:
+    priv: 'n'
+    chroot: 'n'
+    order: '60_130'
+  error:
+    chroot: 'n'
+    order: '60_132'
+  retry:
+    chroot: 'n'
+    command: 'error'
+    order: '60_134'
+  discard:
+    chroot: 'n'
+    order: '60_136'
+  local:
+    unpriv: 'n'
+    chroot: 'n'
+    order: '60_138'
+  virtual:
+    unpriv: 'n'
+    chroot: 'n'
+    order: '60_140'
+  lmtp:
+    chroot: 'n'
+    order: '60_142'
+  anvil:
+    chroot: 'n'
+    maxproc: '1'
+    order: '60_144'
+  scache:
+    chroot: 'n'
+    maxproc: '1'
+    order: '60_146'

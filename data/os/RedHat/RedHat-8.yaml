@@ -1,0 +1,9 @@
+postfix::parameters:
+  compatibility_level: '2'
+  smtpd_tls_cert_file: '/etc/pki/tls/certs/postfix.pem'
+  smtpd_tls_key_file: '/etc/pki/tls/private/postfix.key'
+  smtpd_tls_security_level: 'may'
+  smtp_tls_CApath: '/etc/pki/tls/certs'
+  smtp_tls_CAfile: '/etc/pki/tls/certs/ca-bundle.crt'
+  smtp_tls_security_level: 'may'
+

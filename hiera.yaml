@@ -6,8 +6,11 @@ defaults:
   data_hash: 'yaml_data'
 
 hierarchy:
-  - name: 'module postfix, os-family'
-    path: '%{facts.os.family}-family.yaml'
+  - name: 'module postfix, os defaults'
+    paths:
+      - 'os/%{facts.osfamily}/%{facts.os.name}-%{facts.os.release.full}.yaml'
+      - 'os/%{facts.osfamily}/%{facts.os.name}-%{facts.os.release.major}.yaml'
+      - 'os/%{facts.os.family}.yaml'
 
   - name: 'module postfix, common'
     glob: 'common/*.yaml'

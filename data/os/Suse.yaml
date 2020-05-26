@@ -1,0 +1,131 @@
+# Suse.yaml for postfix module
+postfix::parameters:
+  setgid_group:
+    comments:
+      - 'Suse uses maildrop group for postdrop'
+    value: 'maildrop'
+  compatibility_level: '2'
+  daemon_directory: '/usr/lib/postfix/bin/'
+  smtpd_banner: '$myhostname ESMTP'
+  debugger_command: 'PATH=/bin:/usr/bin:/usr/local/bin:/usr/X11R6/bin; ddd $daemon_directory/$process_name $process_id & sleep 5'
+  html_directory: '/usr/share/doc/packages/postfix-doc/html'
+  manpage_directory: '/usr/share/man'
+  sample_directory: '/usr/share/doc/packages/postfix-doc/samples'
+  readme_directory: '/usr/share/doc/packages/postfix-doc/README_FILES'
+  biff: 'no'
+  disable_vrfy_command: 'yes'
+  alias_maps: ''
+  mailbox_size_limit: '0'
+  message_size_limit: '0'
+  smtpd_helo_required: 'yes'
+  smtp_sasl_security_options: ''
+  relay_domains: '$mydestination, hash:/etc/postfix/relay'
+  inet_protocols: 'ipv4'
+
+postfix::services:
+  smtp:
+    type: 'inet'
+    priv: 'n'
+    chroot: 'n'
+    command: 'smtpd'
+    order: '60_100'
+  pickup:
+    priv: 'n'
+    chroot: 'n'
+    wakeup: '60'
+    maxproc: '1'
+    order: '60_102'
+  cleanup:
+    priv: 'n'
+    chroot: 'n'
+    maxproc: '0'
+    order: '60_104'
+  qmgr:
+    priv: 'n'
+    chroot: 'n'
+    wakeup: '300'
+    maxproc: '1'
+    order: '60_106'
+  tlsmgr:
+    chroot: 'n'
+    wakeup: '1000?'
+    maxproc: '1'
+    order: '60_108'
+  rewrite:
+    chroot: 'n'
+    command: 'trivial-rewrite'
+    order: '60_110'
+  bounce:
+    chroot: 'n'
+    maxproc: '0'
+    order: '60_112'
+  defer:
+    chroot: 'n'
+    maxproc: '0'
+    command: 'bounce'
+    order: '60_114'
+  trace:
+    chroot: 'n'
+    maxproc: '0'
+    command: 'bounce'
+    order: '60_116'
+  verify:
+    chroot: 'n'
+    maxproc: '1'
+    order: '60_118'
+  flush:
+    priv: 'n'
+    chroot: 'n'
+    maxproc: '0'
+    wakeup: '1000?'
+    order: '60_120'
+  proxymap:
+    chroot: 'n'
+    order: '60_122'
+  proxywrite:
+    chroot: 'n'
+    maxproc: '1'
+    command: 'proxymap'
+    order: '60_124'
+  smtp-unix:
+    service_names: ['smtp']
+    chroot: 'n'
+    command: 'smtp'
+    order: '60_126'
+  relay:
+    chroot: 'n'
+    command: 'smtp'
+    order: '60_128'
+  showq:
+    priv: 'n'
+    chroot: 'n'
+    order: '60_130'
+  error:
+    chroot: 'n'
+    order: '60_132'
+  retry:
+    chroot: 'n'
+    command: 'error'
+    order: '60_134'
+  discard:
+    chroot: 'n'
+    order: '60_136'
+  local:
+    unpriv: 'n'
+    chroot: 'n'
+    order: '60_138'
+  virtual:
+    unpriv: 'n'
+    chroot: 'n'
+    order: '60_140'
+  lmtp:
+    chroot: 'n'
+    order: '60_142'
+  anvil:
+    chroot: 'n'
+    maxproc: '1'
+    order: '60_144'
+  scache:
+    chroot: 'n'
+    maxproc: '1'
+    order: '60_146'

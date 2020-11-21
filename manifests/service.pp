@@ -29,7 +29,7 @@ class postfix::service(
   Boolean $ensure_syslog_flag  = false,
 ) {
 
-  Package<|tag == 'postfix-packages'|> -> Service['postfix']
+  Package<|tag == 'postfix-packages'|> -> File<|tag == 'postfix-require-package' |> -> Service['postfix']
 
   service{'postfix':
     ensure => $service_ensure,
@@ -55,19 +55,19 @@ class postfix::service(
 
   if $sync_chroot != '' {
     file  { "${sync_chroot}/etc/resolv.conf":
-      source  => '/etc/resolv.conf',
-      notify  => Service['postfix'],
-      require => Package['postfix'],
+      source => '/etc/resolv.conf',
+      notify => Service['postfix'],
+      tag    => 'postfix-require-packages',
     }
     file  { "${sync_chroot}/etc/hosts":
-      source  => '/etc/hosts',
-      notify  => Service['postfix'],
-      require => Package['postfix'],
+      source => '/etc/hosts',
+      notify => Service['postfix'],
+      tag    => 'postfix-require-packages',
     }
     file  { "${sync_chroot}/etc/services":
-      source  => '/etc/services',
-      notify  => Service['postfix'],
-      require => Package['postfix'],
+      source => '/etc/services',
+      notify => Service['postfix'],
+      tag    => 'postfix-require-packages',
     }
   }
   if ( $ensure_syslog_flag )  and ( $sync_chroot != '' ){

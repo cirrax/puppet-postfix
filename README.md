@@ -90,6 +90,14 @@ Maps are hash merged in hiera.
 
 To use them use set the parameters in master.cf accordingly.
 
+### support for postfix profiles
+Instead of creating the postfix configuration with the parameters postfix::parameters, postfix::services and postfix::maps
+you can define several profiles and use postfix::use\_profile to choose an appropriate profile for the configuration.
+The chosen profile is then merged with original parameters to generate the configuration.
+
+Purpose of profiles is to have distinct postfix functions such as a full mailserver or just a satellite system that does not receive mail but 
+relay everything to a main server. Or you need to distinct postfix configuration by datacenter or ....
+
 ## Contributing
 
 Please report bugs and feature request using GitHub issue tracker.

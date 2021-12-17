@@ -36,9 +36,13 @@ The following parameters are available in the `postfix` class:
 
 * [`packages`](#packages)
 * [`package_ensure`](#package_ensure)
+* [`use_profile`](#use_profile)
 * [`parameters`](#parameters)
+* [`parameters_profiles`](#parameters_profiles)
 * [`services`](#services)
+* [`services_profiles`](#services_profiles)
 * [`maps`](#maps)
+* [`maps_profiles`](#maps_profiles)
 * [`map_dir`](#map_dir)
 * [`ssl_dir`](#ssl_dir)
 * [`owner`](#owner)
@@ -65,11 +69,34 @@ defaults to 'install'
 
 Default value: `'present'`
 
+##### <a name="use_profile"></a>`use_profile`
+
+Data type: `String[1]`
+
+profile for the configuration to use.
+
+Default value: `'none'`
+
 ##### <a name="parameters"></a>`parameters`
 
 Data type: `Hash`
 
 Hash of parameters for server
+Remark: in hiera this parameter is hash merged
+
+Default value: `{}`
+
+##### <a name="parameters_profiles"></a>`parameters_profiles`
+
+Data type: `Hash`
+
+a Hash of profiles for parameters (see above)
+if $postfix::use_profile is set then and
+$parameters_profiles["$postfix::use_profile"] exists,
+the profile is merged with $postfix::parameters.
+Like this several config profiles can be defined
+(eg. mailserver, mail sattelite, etc.)
+Remark: in hiera this parameter is hash merged
 
 Default value: `{}`
 
@@ -79,6 +106,21 @@ Data type: `Hash`
 
 Hash of services for server
 Defaults to {}
+Remark: in hiera this parameter is hash merged
+
+Default value: `{}`
+
+##### <a name="services_profiles"></a>`services_profiles`
+
+Data type: `Hash`
+
+a Hash of profiles for services (see above)
+if $postfix::use_profile is set then and
+$services_profiles["$postfix::use_profile"] exists,
+the profile is merged with $postfix::services.
+Like this several config profiles can be defined
+(eg. mailserver, mail sattelite, etc.)
+Remark: in hiera this parameter is hash merged
 
 Default value: `{}`
 
@@ -88,6 +130,21 @@ Data type: `Hash`
 
 Hash of maps to generate
 Defaults to {}
+Remark: in hiera this parameter is hash merged
+
+Default value: `{}`
+
+##### <a name="maps_profiles"></a>`maps_profiles`
+
+Data type: `Hash`
+
+a Hash of profiles for maps (see above)
+if $postfix::use_profile is set then and
+$maps_profiles["$postfix::use_profile"] exists,
+the profile is merged with $postfix::maps.
+Like this several config profiles can be defined
+(eg. mailserver, mail sattelite, etc.)
+Remark: in hiera this parameter is hash merged
 
 Default value: `{}`
 

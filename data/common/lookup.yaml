@@ -2,9 +2,16 @@
 # common/lookup.yaml for postfix module
 
 lookup_options:
-   postfix::services:
-      merge: 'hash'
-   postfix::parameters:
-      merge: 'hash'
-   postfix::maps:
-      merge: 'hash'
+  postfix::services:
+    merge: 'hash'
+  postfix::parameters:
+    merge: 'hash'
+  postfix::maps:
+    merge: 'hash'
+
+  postfix::services_profiles:
+    merge: 'hash'
+  postfix::parameters_profiles:
+    merge: 'hash'
+  postfix::maps_profiles:
+    merge: 'hash'

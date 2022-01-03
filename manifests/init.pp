@@ -19,7 +19,7 @@
 #   $parameters_profiles["$postfix::use_profile"] exists,
 #   the profile is merged with $postfix::parameters.
 #   Like this several config profiles can be defined 
-#   (eg. mailserver, mail sattelite, etc.)
+#   (eg. mailserver, mail satellite, etc.)
 #   Remark: in hiera this parameter is hash merged
 # @param services
 #   Hash of services for server
@@ -31,7 +31,7 @@
 #   $services_profiles["$postfix::use_profile"] exists,
 #   the profile is merged with $postfix::services.
 #   Like this several config profiles can be defined 
-#   (eg. mailserver, mail sattelite, etc.)
+#   (eg. mailserver, mail satellite, etc.)
 #   Remark: in hiera this parameter is hash merged
 # @param maps
 #   Hash of maps to generate 
@@ -43,7 +43,7 @@
 #   $maps_profiles["$postfix::use_profile"] exists,
 #   the profile is merged with $postfix::maps.
 #   Like this several config profiles can be defined 
-#   (eg. mailserver, mail sattelite, etc.)
+#   (eg. mailserver, mail satellite, etc.)
 #   Remark: in hiera this parameter is hash merged
 # @param map_dir
 #   directory for maps to create

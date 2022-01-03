@@ -95,7 +95,7 @@ if $postfix::use_profile is set then and
 $parameters_profiles["$postfix::use_profile"] exists,
 the profile is merged with $postfix::parameters.
 Like this several config profiles can be defined
-(eg. mailserver, mail sattelite, etc.)
+(eg. mailserver, mail satellite, etc.)
 Remark: in hiera this parameter is hash merged
 
 Default value: `{}`
@@ -119,7 +119,7 @@ if $postfix::use_profile is set then and
 $services_profiles["$postfix::use_profile"] exists,
 the profile is merged with $postfix::services.
 Like this several config profiles can be defined
-(eg. mailserver, mail sattelite, etc.)
+(eg. mailserver, mail satellite, etc.)
 Remark: in hiera this parameter is hash merged
 
 Default value: `{}`
@@ -143,7 +143,7 @@ if $postfix::use_profile is set then and
 $maps_profiles["$postfix::use_profile"] exists,
 the profile is merged with $postfix::maps.
 Like this several config profiles can be defined
-(eg. mailserver, mail sattelite, etc.)
+(eg. mailserver, mail satellite, etc.)
 Remark: in hiera this parameter is hash merged
 
 Default value: `{}`

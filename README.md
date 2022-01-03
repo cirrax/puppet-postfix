@@ -17,7 +17,7 @@
 
 The purpose of this module is to configure postfix. It allows you to specify two postfix configurations in hiera. 
 
-Version 2.x.x and above does not use two separated classes for server and satellige like it was done in 1.x.x versions. Instead hiera is used to overwrite configs.
+Version 2.x.x and above does not use two separated classes for server and satellite like it was done in 1.x.x versions. Instead hiera is used to overwrite configs.
 Version 2.x.x and above does not merge parameters in code anymore, instead hiera merge is used.
 
 ## Usage
@@ -53,7 +53,7 @@ Do deactivate a parameter that has been set by default, use:
       mydestination:
         deactivate: true
 
-Pervices are hash merged in hiera.
+Services are hash merged in hiera.
 
 #### To set services in master.cf file use:
 
@@ -69,7 +69,7 @@ To add a service in master.cf file use:
         chroot: 'y'
         command: 'trivial-rewrite'
 
-Services are hash merged in hiera and can be deacitvated and removed from hiera.
+Services are hash merged in hiera and can be deactivated and removed from hiera.
 
 #### create lookup maps:
 

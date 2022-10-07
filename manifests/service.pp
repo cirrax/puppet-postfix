@@ -54,6 +54,11 @@ class postfix::service(
   }
 
   if $sync_chroot != '' {
+    file  { "${sync_chroot}/etc":
+      ensure => 'directory',
+      notify => Service['postfix'],
+      tag    => 'postfix-require-packages',
+    }
     file  { "${sync_chroot}/etc/resolv.conf":
       source => '/etc/resolv.conf',
       notify => Service['postfix'],

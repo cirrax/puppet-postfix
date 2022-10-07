@@ -27,15 +27,15 @@
 #   file mode of the map file
 #
 define postfix::map (
-  String $map_dir,
-  String $postmap_command,
-  String $owner,
-  String $group,
-  String $mode,
-  String $map_name        = $title,
-  String $type            = 'hash',
-  String $source          = '',
-  Array  $contents        = [],
+  String              $map_dir,
+  String              $postmap_command,
+  String              $owner,
+  String              $group,
+  String              $mode,
+  String              $map_name        = $title,
+  String              $type            = 'hash',
+  Optional[String[1]] $source          = undef,
+  Array               $contents        = [],
 ) {
   $filename = "${map_dir}/${map_name}"
 
@@ -46,7 +46,7 @@ define postfix::map (
     notify => Service['postfix'],
   }
 
-  if $source != '' {
+  if $source {
     concat::fragment { "postfix::map: source fragment ${title}":
       target => $filename,
       source => $source,

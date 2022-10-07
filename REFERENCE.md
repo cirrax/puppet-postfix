@@ -587,12 +587,12 @@ Default value: `'hash'`
 
 ##### <a name="source"></a>`source`
 
-Data type: `String`
+Data type: `Optional[String[1]]`
 
 source of the map
 defaults to ''
 
-Default value: `''`
+Default value: ``undef``
 
 ##### <a name="contents"></a>`contents`
 

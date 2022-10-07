@@ -20,13 +20,13 @@
 #   this is very OpenBSD specific !
 #
 class postfix::service (
-  String  $service_name        = 'postfix',
-  String  $service_ensure      = 'running',
-  Boolean $service_enable      = true,
-  Array   $disabled_services   = [],
-  Boolean $exec_postfix_enable = false,
-  String  $sync_chroot         = '',
-  Boolean $ensure_syslog_flag  = false,
+  String              $service_name        = 'postfix',
+  String              $service_ensure      = 'running',
+  Boolean             $service_enable      = true,
+  Array               $disabled_services   = [],
+  Boolean             $exec_postfix_enable = false,
+  Optional[String[1]] $sync_chroot         = undef,
+  Boolean             $ensure_syslog_flag  = false,
 ) {
   Package<|tag == 'postfix-packages'|> -> File<|tag == 'postfix-require-package' |> -> Service['postfix']
 
@@ -52,7 +52,7 @@ class postfix::service (
     }
   }
 
-  if $sync_chroot != '' {
+  if $sync_chroot {
     file { "${sync_chroot}/etc":
       ensure => 'directory',
       notify => Service['postfix'],
@@ -70,13 +70,13 @@ class postfix::service (
       source => '/etc/services',
       notify => Service['postfix'],
     }
-  }
-  if ( $ensure_syslog_flag )  and ( $sync_chroot != '' ) {
-    # allow logging from postfix chroot (needs restart of syslogd) 
-    file_line { 'postfix syslog':
-      path => '/etc/rc.conf.local',
-      line => "syslogd_flags='\$syslogd_flags -a ${sync_chroot}/dev/log'",
-      # require => File['/etc/rc.conf.local'], this is autorequired
+    if ( $ensure_syslog_flag ) {
+      # allow logging from postfix chroot (needs restart of syslogd)
+      file_line { 'postfix syslog':
+        path => '/etc/rc.conf.local',
+        line => "syslogd_flags='\$syslogd_flags -a ${sync_chroot}/dev/log'",
+        # require => File['/etc/rc.conf.local'], this is autorequired
+      }
     }
   }
 }

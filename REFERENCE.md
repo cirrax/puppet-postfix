@@ -375,12 +375,12 @@ Default value: ``false``
 
 ##### <a name="sync_chroot"></a>`sync_chroot`
 
-Data type: `String`
+Data type: `Optional[String[1]]`
 
 if set to a path, the according chroot
 is synced.
 
-Default value: `''`
+Default value: ``undef``
 
 ##### <a name="ensure_syslog_flag"></a>`ensure_syslog_flag`
 
@@ -452,7 +452,7 @@ Data type: `Array`
 Array of service names to configure.
 defaults to [$title]
 
-Default value: `[ $title ]`
+Default value: `[$title]`
 
 ##### <a name="priv"></a>`priv`
 

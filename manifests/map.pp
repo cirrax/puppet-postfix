@@ -37,7 +37,6 @@ define postfix::map (
   String $source          = '',
   Array  $contents        = [],
 ) {
-
   $filename = "${map_dir}/${map_name}"
 
   concat { $filename:
@@ -48,13 +47,13 @@ define postfix::map (
   }
 
   if $source != '' {
-    concat::fragment{ "postfix::map: source fragment ${title}":
+    concat::fragment { "postfix::map: source fragment ${title}":
       target => $filename,
       source => $source,
     }
   }
   if contents != [] {
-    concat::fragment{ "postfix::map: content fragment ${title}":
+    concat::fragment { "postfix::map: content fragment ${title}":
       target  => $filename,
       content => $contents.join("\n"),
     }

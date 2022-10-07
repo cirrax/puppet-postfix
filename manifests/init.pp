@@ -84,8 +84,7 @@ class postfix (
   String              $group               = 'root',
   String              $mode                = '0644',
 ) {
-
-  Package<|tag == 'postfix-packages'|> -> File[ $map_dir, $ssl_dir ]
+  Package<|tag == 'postfix-packages'|> -> File[$map_dir, $ssl_dir]
 
   $package_default = {
     ensure => $package_ensure,
@@ -93,16 +92,16 @@ class postfix (
   }
   ensure_packages($packages, $package_default)
 
-  file { [ $map_dir, $ssl_dir ]:
+  file { [$map_dir, $ssl_dir]:
     ensure => directory,
     owner  => $owner,
     group  => $group,
     mode   => '0755',
   }
 
-  include ::postfix::service
+  include postfix::service
 
-  class { '::postfix::config::main' :
+  class { 'postfix::config::main' :
     parameters   => $parameters + pick($parameters_profiles[$use_profile], {}),
     main_cf_file => $main_cf_file,
     owner        => $owner,
@@ -110,7 +109,7 @@ class postfix (
     mode         => $mode,
   }
 
-  class { '::postfix::config::master' :
+  class { 'postfix::config::master' :
     services       => $services + pick($services_profiles[$use_profile], {}),
     master_cf_file => $master_cf_file,
     owner          => $owner,
@@ -119,11 +118,11 @@ class postfix (
   }
 
   create_resources('::postfix::map', $maps + pick($maps_profiles[$use_profile], {}), {
-    map_dir         => $map_dir,
-    postmap_command => $postmap_command,
-    owner           => $owner,
-    group           => $group,
-    mode            => $mode,
+      map_dir         => $map_dir,
+      postmap_command => $postmap_command,
+      owner           => $owner,
+      group           => $group,
+      mode            => $mode,
   })
 
   # create generic resources (eg. to retrieve certificate)

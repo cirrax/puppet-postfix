@@ -48,7 +48,7 @@ define postfix::config::service (
   String  $master_cf_file,
   String  $type           = 'unix',
   String  $command        = $title,
-  Array   $service_names  = [ $title ],
+  Array   $service_names  = [$title],
   String  $priv           = '-',
   String  $unpriv         = '-',
   String  $chroot         = '-',
@@ -58,12 +58,10 @@ define postfix::config::service (
   Array   $comments       = [],
   Boolean $active         = true,
   String  $order          = '55',
-){
-
-  concat::fragment{"master.cf service: ${title}":
+) {
+  concat::fragment { "master.cf service: ${title}":
     target  => $master_cf_file,
     content => template('postfix/service.erb'),
     order   => $order,
   }
-
 }

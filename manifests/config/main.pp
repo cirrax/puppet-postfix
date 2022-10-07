@@ -24,15 +24,13 @@ class postfix::config::main (
   String $mode,
   Hash   $parameters       = {},
 ) {
-
-  Package<|tag == 'postfix-packages'|> -> File[ $main_cf_file ]
+  Package<|tag == 'postfix-packages'|> -> File[$main_cf_file]
 
   file { $main_cf_file :
     owner   => $owner,
     group   => $group,
     mode    => $mode,
-    content => epp('postfix/main.cf.epp',{ parameters => $parameters } ),
+    content => epp('postfix/main.cf.epp',{ parameters => $parameters }),
     notify  => Service['postfix'],
   }
-
 }

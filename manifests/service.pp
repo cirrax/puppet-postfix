@@ -19,7 +19,7 @@
 #   a flag is set to allow logging from chroot
 #   this is very OpenBSD specific !
 #
-class postfix::service(
+class postfix::service (
   String  $service_name        = 'postfix',
   String  $service_ensure      = 'running',
   Boolean $service_enable      = true,
@@ -28,16 +28,15 @@ class postfix::service(
   String  $sync_chroot         = '',
   Boolean $ensure_syslog_flag  = false,
 ) {
-
   Package<|tag == 'postfix-packages'|> -> File<|tag == 'postfix-require-package' |> -> Service['postfix']
 
-  service{'postfix':
+  service { 'postfix':
     ensure => $service_ensure,
     name   => $service_name,
     enable => $service_enable,
   }
 
-  service {$disabled_services :
+  service { $disabled_services :
     ensure => 'stopped',
     enable => false,
     before => Service['postfix'],
@@ -45,7 +44,7 @@ class postfix::service(
 
   if $exec_postfix_enable {
     # enable postfix in mailer.conf for OpenBSD
-    exec {'postfix-enable':
+    exec { 'postfix-enable':
       path    => ['/sbin','/usr/sbin','/bin','/usr/bin','/usr/local/sbin','/usr/local/bin'],
       command => 'postfix-enable',
       onlyif  => 'test -e /etc/mailer.conf.postfix',
@@ -54,27 +53,27 @@ class postfix::service(
   }
 
   if $sync_chroot != '' {
-    file  { "${sync_chroot}/etc":
+    file { "${sync_chroot}/etc":
       ensure => 'directory',
       notify => Service['postfix'],
       tag    => 'postfix-require-packages',
     }
-    file  { "${sync_chroot}/etc/resolv.conf":
+    file { "${sync_chroot}/etc/resolv.conf":
       source => '/etc/resolv.conf',
       notify => Service['postfix'],
     }
-    file  { "${sync_chroot}/etc/hosts":
+    file { "${sync_chroot}/etc/hosts":
       source => '/etc/hosts',
       notify => Service['postfix'],
     }
-    file  { "${sync_chroot}/etc/services":
+    file { "${sync_chroot}/etc/services":
       source => '/etc/services',
       notify => Service['postfix'],
     }
   }
-  if ( $ensure_syslog_flag )  and ( $sync_chroot != '' ){
+  if ( $ensure_syslog_flag )  and ( $sync_chroot != '' ) {
     # allow logging from postfix chroot (needs restart of syslogd) 
-    file_line {'postfix syslog':
+    file_line { 'postfix syslog':
       path => '/etc/rc.conf.local',
       line => "syslogd_flags='\$syslogd_flags -a ${sync_chroot}/dev/log'",
       # require => File['/etc/rc.conf.local'], this is autorequired

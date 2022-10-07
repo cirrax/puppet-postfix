@@ -18,8 +18,7 @@ class postfix::config::master (
   String $mode,
   Hash   $services = {},
 ) {
-
-  Package<|tag == 'postfix-packages'|> -> Concat[ $master_cf_file ]
+  Package<|tag == 'postfix-packages'|> -> Concat[$master_cf_file]
 
   concat { $master_cf_file :
     owner  => $owner,
@@ -28,7 +27,7 @@ class postfix::config::master (
     notify => Service['postfix'],
   }
 
-  concat::fragment{'postfix: master_cf_header' :
+  concat::fragment { 'postfix: master_cf_header' :
     target  => $master_cf_file,
     content => template('postfix/service_header.erb'),
     order   => '00',

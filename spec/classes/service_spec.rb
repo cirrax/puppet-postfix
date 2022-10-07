@@ -44,22 +44,26 @@ describe 'postfix::service' do
         it { is_expected.not_to contain_service('smtpd') }
 
         it {
+          is_expected.to contain_file('/var/spool/postfix/etc')
+            .with_ensure('directory')
+            .with_notify('Service[postfix]')
+            .with_tag('postfix-require-packages')
+        }
+
+        it {
           is_expected.to contain_file('/var/spool/postfix/etc/resolv.conf')
             .with_source('/etc/resolv.conf')
             .with_notify('Service[postfix]')
-            .with_tag('postfix-require-packages')
         }
         it {
           is_expected.to contain_file('/var/spool/postfix/etc/hosts')
             .with_source('/etc/hosts')
             .with_notify('Service[postfix]')
-            .with_tag('postfix-require-packages')
         }
         it {
           is_expected.to contain_file('/var/spool/postfix/etc/services')
             .with_source('/etc/services')
             .with_notify('Service[postfix]')
-            .with_tag('postfix-require-packages')
         }
       end
 

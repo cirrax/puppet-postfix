@@ -62,17 +62,14 @@ class postfix::service(
     file  { "${sync_chroot}/etc/resolv.conf":
       source => '/etc/resolv.conf',
       notify => Service['postfix'],
-      tag    => 'postfix-require-packages',
     }
     file  { "${sync_chroot}/etc/hosts":
       source => '/etc/hosts',
       notify => Service['postfix'],
-      tag    => 'postfix-require-packages',
     }
     file  { "${sync_chroot}/etc/services":
       source => '/etc/services',
       notify => Service['postfix'],
-      tag    => 'postfix-require-packages',
     }
   }
   if ( $ensure_syslog_flag )  and ( $sync_chroot != '' ){

@@ -7,7 +7,7 @@
 # @param packages 
 #   packages to install
 # @param package_ensure
-#   defaults to 'install'
+#   defaults to 'installed'
 # @param use_profile
 #   profile for the configuration to use.
 # @param parameters
@@ -66,7 +66,7 @@
 #
 class postfix (
   Array               $packages            = ['postfix'],
-  String              $package_ensure      = 'present',
+  String              $package_ensure      = 'installed',
   String[1]           $use_profile         = 'none',
   Hash                $parameters          = {},
   Hash                $parameters_profiles = {},

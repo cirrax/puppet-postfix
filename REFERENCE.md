@@ -65,9 +65,9 @@ Default value: `['postfix']`
 
 Data type: `String`
 
-defaults to 'install'
+defaults to 'installed'
 
-Default value: `'present'`
+Default value: `'installed'`
 
 ##### <a name="-postfix--use_profile"></a>`use_profile`
 

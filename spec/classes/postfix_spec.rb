@@ -11,7 +11,7 @@ describe 'postfix' do
     it { is_expected.to contain_class('postfix::service') }
     it {
       is_expected.to contain_package('postfix')
-        .with(ensure: 'present',
+        .with(ensure: 'installed',
               tag: 'postfix-packages')
     }
   end
@@ -45,7 +45,7 @@ describe 'postfix' do
 
         it {
           is_expected.to contain_package('mypackage')
-            .with(ensure: 'present',
+            .with(ensure: 'installed',
                   tag: 'postfix-packages')
         }
       end

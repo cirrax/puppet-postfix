@@ -5,6 +5,8 @@ describe 'postfix::map' do
   let(:pre_condition) { 'service {"postfix": }' }
   let :default_params do
     { map_dir: '/etc/postfix/maps',
+      map_name: 'the-title',
+      type: 'hash',
       postmap_command: '/usr/sbin/postmap',
       owner: 'root',
       group: 'root',
@@ -16,38 +18,34 @@ describe 'postfix::map' do
       it { is_expected.to compile.with_all_deps }
     end
 
-    context 'it includes map file' do
-      it {
-        is_expected.to contain_concat('/etc/postfix/maps/' + title)
-          .with(owner: 'root',
-                mode: '0644')
-          .with_notify('Service[postfix]')
-      }
-    end
+    it {
+      is_expected.to contain_concat(params[:map_dir] + '/' + params[:map_name])
+        .with(owner: params[:owner],
+              mode: params[:mode])
+        .with_notify('Service[postfix]')
+    }
 
-    context 'rebuild map' do
-      it {
-        is_expected.to contain_exec('rebuild map ' + title)
-          .with_command(%r{postmap})
-          .with_require('Concat[/etc/postfix/maps/' + title + ']')
-          .with_notify('Service[postfix]')
-          .with_unless(%r{/etc/postfix/maps/#{title}.db})
-      }
-    end
+    it {
+      is_expected.to contain_exec('rebuild map ' + title)
+        .with_command(params[:postmap_command] + ' ' + params[:type] + ':' + params[:map_dir] + '/' + params[:map_name])
+        .with_require('Concat[' + params[:map_dir] + '/' + params[:map_name] + ']')
+        .with_notify('Service[postfix]')
+        .with_unless("test #{params[:map_dir]}/#{params[:map_name]}.db -nt #{params[:map_dir]}/#{params[:map_name]}")
+    }
   end
   on_supported_os.each do |os, os_facts|
     context "on #{os}" do
       let(:facts) { os_facts }
 
       context 'whith defaults' do
-        let(:title) { 'mymap' }
+        let(:title) { 'the-title' }
         let(:params) { default_params }
 
         it_behaves_like 'postfix::map define'
       end
 
       context 'whith content defined' do
-        let(:title) { 'map_with_content' }
+        let(:title) { 'the-title' }
         let :params do
           default_params.merge(contents: ['blah1', 'blah2'])
         end
@@ -60,8 +58,8 @@ describe 'postfix::map' do
         }
       end
 
-      context 'whith source defined' do
-        let(:title) { 'map_with_source' }
+      context 'with source defined' do
+        let(:title) { 'the-title' }
         let :params do
           default_params.merge(source: 'a_source')
         end
@@ -75,23 +73,16 @@ describe 'postfix::map' do
       end
 
       context 'whith btree map type' do
-        let(:title) { 'dbm_map_type' }
+        let(:title) { 'the-title' }
         let :params do
           default_params.merge(type: 'btree')
         end
 
         it_behaves_like 'postfix::map define'
-
-        context 'rebuild btree map' do
-          it {
-            is_expected.to contain_exec('rebuild map dbm_map_type')
-              .with_command('/usr/sbin/postmap btree:/etc/postfix/maps/dbm_map_type')
-          }
-        end
       end
 
       context 'whith custom map path and name' do
-        let(:title) { 'custom_map_path_and_name' }
+        let(:title) { 'the-title' }
         let :params do
           default_params.merge(
             map_dir: '/blah/fasel',
@@ -99,58 +90,11 @@ describe 'postfix::map' do
           )
         end
 
-        context 'it includes map file' do
-          it {
-            is_expected.to contain_concat('/blah/fasel/myname')
-              .with(owner: 'root',
-                    group: 'root',
-                    mode: '0644')
-              .with_notify('Service[postfix]')
-          }
-        end
-
-        context 'rebuild map' do
-          it {
-            is_expected.to contain_exec('rebuild map custom_map_path_and_name')
-              .with_command('/usr/sbin/postmap hash:/blah/fasel/myname')
-              .with_require('Concat[/blah/fasel/myname]')
-              .with_notify('Service[postfix]')
-              .with_unless(%r{/blah/fasel/myname.(db|cdb|pag)})
-          }
-        end
-      end
-
-      context 'whith custom map path' do
-        let(:title) { 'custom_map_path' }
-        let :params do
-          default_params.merge(
-            map_dir: '/blah/fasel',
-          )
-        end
-
-        context 'it includes map file' do
-          it {
-            is_expected.to contain_concat('/blah/fasel/custom_map_path')
-              .with(owner: 'root',
-                    group: 'root',
-                    mode: '0644')
-              .with_notify('Service[postfix]')
-          }
-        end
-
-        context 'rebuild map' do
-          it {
-            is_expected.to contain_exec('rebuild map custom_map_path')
-              .with_command('/usr/sbin/postmap hash:/blah/fasel/custom_map_path')
-              .with_require('Concat[/blah/fasel/custom_map_path]')
-              .with_notify('Service[postfix]')
-              .with_unless(%r{/blah/fasel/#{title}.db})
-          }
-        end
+        it_behaves_like 'postfix::map define'
       end
 
       context 'whith custom postmap' do
-        let(:title) { 'custom_postmap' }
+        let(:title) { 'test-map' }
 
         let :params do
           default_params.merge(
@@ -158,19 +102,11 @@ describe 'postfix::map' do
           )
         end
 
-        context 'rebuild map' do
-          it {
-            is_expected.to contain_exec('rebuild map custom_postmap')
-              .with_command('my_postmap_command hash:/etc/postfix/maps/custom_postmap')
-              .with_require('Concat[/etc/postfix/maps/custom_postmap]')
-              .with_notify('Service[postfix]')
-              .with_unless(%r{/etc/postfix/maps/#{title}.db})
-          }
-        end
+        it_behaves_like 'postfix::map define'
       end
 
       context 'whith unknown map type' do
-        let(:title) { 'unknown_map_type' }
+        let(:title) { 'the-title' }
 
         let :params do
           default_params.merge(

@@ -30,7 +30,7 @@ class postfix::config::main (
     owner   => $owner,
     group   => $group,
     mode    => $mode,
-    content => epp('postfix/main.cf.epp',{ parameters => $parameters }),
+    content => epp('postfix/main.cf.epp', { parameters => $parameters }),
     notify  => Service['postfix'],
   }
 }

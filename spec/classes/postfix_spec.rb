@@ -3,6 +3,10 @@
 require 'spec_helper'
 
 describe 'postfix' do
+  let :default_params do
+    { services: {} }
+  end
+
   shared_examples_for 'postfix server' do
     it { is_expected.to compile.with_all_deps }
 
@@ -20,7 +24,9 @@ describe 'postfix' do
     context "on #{os}" do
       let(:facts) { os_facts }
 
-      describe 'without parameters' do
+      describe 'with defaults' do
+        let(:params) { default_params }
+
         it_behaves_like 'postfix server'
         it {
           is_expected.to contain_file('/etc/postfix/ssl')
@@ -38,7 +44,9 @@ describe 'postfix' do
 
       describe 'with server package' do
         let :params do
-          { packages: ['mypackage', 'postfix'] }
+          default_params.merge(
+                    { packages: ['mypackage', 'postfix'] },
+                  )
         end
 
         it_behaves_like 'postfix server'
@@ -52,7 +60,9 @@ describe 'postfix' do
 
       describe 'with maps' do
         let :params do
-          { maps: { 'test-map' => {} } }
+          default_params.merge(
+                    { maps: { 'test-map' => {} } },
+                  )
         end
 
         it_behaves_like 'postfix server'
@@ -63,7 +73,9 @@ describe 'postfix' do
       describe 'with additional resources' do
         # use user resource to test (resource needs to be available)
         let :params do
-          { create_resources: { 'user' => { 'usertitle' => {} } } }
+          default_params.merge(
+                    { create_resources: { 'user' => { 'usertitle' => {} } } },
+                  )
         end
 
         it_behaves_like 'postfix server'

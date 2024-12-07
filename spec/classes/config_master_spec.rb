@@ -7,7 +7,8 @@ describe 'postfix::config::master' do
     { master_cf_file: '/etc/postfix/master.cf',
       owner: 'root',
       group: 'root',
-      mode: '0644' }
+      mode: '0644',
+      services: { 'smtp' => { 'type' => 'inet', 'priv' => 'n', 'chroot' => 'y', 'command' => 'smtpd', 'order' => '60_100' } }, }
   end
 
   shared_examples_for 'postfix::config::master class' do
@@ -18,6 +19,13 @@ describe 'postfix::config::master' do
         group: 'root',
         mode: '0644',
       )
+    end
+    context 'it configures services' do
+      it {
+        params[:services].each_pair do |k, v|
+          is_expected.to contain_postfix__config__service(k).with(v)
+        end
+      }
     end
     context 'it includes concat_fragment' do
       it {

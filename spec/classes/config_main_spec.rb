@@ -6,7 +6,7 @@ describe 'postfix::config::main' do
     { main_cf_file: '/etc/postfix/main.cf',
       owner: 'root',
       group: 'root',
-      mode: '0644' }
+      mode: '0644',  }
   end
 
   shared_examples_for 'postfix::config::main class' do

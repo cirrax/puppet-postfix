@@ -79,7 +79,7 @@ Simple lookup maps can be created using:
       regex_sender_canonical:
         type: 'regex'
         contents:
-          - "/^(.*)@%{::fqdn}/      ${1}+%{::hostname}@internaldomain.cirrax.com"
+          - "/^(.*)@%{facts.networking.fqdn}/      ${1}+%{facts.networking.hostname}@internaldomain.cirrax.com"
       hash_rewrite_local_sender:
         type: 'hash'
         contents:

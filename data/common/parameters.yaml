@@ -5,13 +5,13 @@ postfix::parameters:
    myhostname:
       comments:
          - 'The internet hostname of this mail system'
-      value: "%{fqdn}"
+      value: "%{facts.networking.fqdn}"
 
-   myorigin: "%{fqdn}"
+   myorigin: "%{facts.networking.fqdn}"
 
    mydestination:
-      - "%{fqdn}"
-      - "%{hostname}"
+      - "%{facts.networking.fqdn}"
+      - "%{facts.networking.hostname}"
       - 'localhost'
 
    mynetworks:

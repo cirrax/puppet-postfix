@@ -27,11 +27,11 @@
 #   file mode of the map file
 #
 define postfix::map (
-  String              $map_dir,
-  String              $postmap_command,
-  String              $owner,
-  String              $group,
-  String              $mode,
+  String              $map_dir         = $postfix::map_dir,
+  String              $postmap_command = $postfix::postmap_command,
+  String              $owner           = $postfix::owner,
+  String              $group           = $postfix::group,
+  String              $mode            = $postfix::mode,
   String              $map_name        = $title,
   String              $type            = 'hash',
   Optional[String[1]] $source          = undef,
